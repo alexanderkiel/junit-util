@@ -26,7 +26,7 @@ public class AssertTest {
 
     private static class EqualsNotTestingNull {
 
-        private int value;
+        private final int value;
 
         private EqualsNotTestingNull(int value) {
             this.value = value;
@@ -59,7 +59,7 @@ public class AssertTest {
 
     private static class HashCodeReturnsAlways42 {
 
-        private int value;
+        private final int value;
 
         private HashCodeReturnsAlways42(int value) {
             this.value = value;
@@ -78,6 +78,40 @@ public class AssertTest {
         @Override
         public int hashCode() {
             return 42;
+        }
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testAssertBasicEqualsAndHashCodeBehaviorThrowsAssertionErrorOnHashCodeReturnsDifferentValuesOnEqualInstances() {
+        HashCodeReturnsDifferentValuesOnEqualInstances foo1 = new HashCodeReturnsDifferentValuesOnEqualInstances(1, 1);
+        HashCodeReturnsDifferentValuesOnEqualInstances foo2 = new HashCodeReturnsDifferentValuesOnEqualInstances(1, 2);
+        HashCodeReturnsDifferentValuesOnEqualInstances bar = new HashCodeReturnsDifferentValuesOnEqualInstances(2, 1);
+
+        assertBasicEqualsAndHashCodeBehavior(foo1, foo2, bar);
+    }
+
+    private static class HashCodeReturnsDifferentValuesOnEqualInstances {
+
+        private final int value1, value2;
+
+        private HashCodeReturnsDifferentValuesOnEqualInstances(int value1, int value2) {
+            this.value1 = value1;
+            this.value2 = value2;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof HashCodeReturnsDifferentValuesOnEqualInstances)) return false;
+
+            HashCodeReturnsDifferentValuesOnEqualInstances that = (HashCodeReturnsDifferentValuesOnEqualInstances) o;
+
+            return value1 == that.value1;
+        }
+
+        @Override
+        public int hashCode() {
+            return value2;
         }
     }
 }
