@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Junit Util">
+    <version position="left"/>
+    <body>
+        <menu name="Junit Util">
+            <item name="Overview" href="index.html"/>
+        </menu>
+        <menu ref="parent"/>
+        <menu ref="reports"/>
+    </body>
+</project>

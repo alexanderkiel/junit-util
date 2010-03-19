@@ -9,6 +9,27 @@
     <artifactId>junit-util</artifactId>
     <version>0.1-SNAPSHOT</version>
 
+    <name>junit-util</name>
+
+    <description>
+        Junit-util contains common assertions which extend the junit assertions and are helpful in many projects.
+    </description>
+
+    <developers>
+        <developer>
+            <id>akiel</id>
+            <name>Alexander Kiel</name>
+            <email>alexanderkiel@gmx.net</email>
+            <url>http://www.alexanderkiel.net/</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:svn:https://svn.alexanderkiel.net/projects/junit-util/trunk</connection>
+        <tag>HEAD</tag>
+        <url>https://svn.alexanderkiel.net/projects/junit-util/trunk</url>
+    </scm>
+
     <dependencies>
 
         <dependency>
@@ -88,5 +109,12 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <distributionManagement>
+        <site>
+            <id>homepage</id>
+            <url>scp://alexanderkiel.net/var/www/www.alexanderkiel.net/www/static/projects/junit-util/</url>
+        </site>
+    </distributionManagement>
 
 </project>
