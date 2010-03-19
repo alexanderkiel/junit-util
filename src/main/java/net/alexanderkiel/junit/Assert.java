@@ -3,6 +3,7 @@ package net.alexanderkiel.junit;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Alexander Kiel
@@ -39,7 +40,12 @@ public abstract class Assert {
 
         assertTrue("equals is reflexive", foo1.equals(foo1));
 
-        assertFalse("not equals null", foo1.equals(null));
+        try {
+            assertFalse("not equals null", foo1.equals(null));
+        } catch (NullPointerException e) {
+            fail("equals doesn't throw NullPointerExceptions");
+        }
+        
         assertFalse("not equals instances other classes", foo1.equals(new Object()));
 
         assertTrue("equals is symmetric", foo1.equals(foo2));
