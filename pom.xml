@@ -9,11 +9,12 @@
     <artifactId>junit-util</artifactId>
     <version>0.1-SNAPSHOT</version>
 
-    <name>junit-util</name>
-
+    <name>Junit Util</name>
     <description>
-        Junit-util contains common assertions which extend the junit assertions and are helpful in many projects.
+        Junit Util contains common assertions which extend the junit assertions and are helpful in many projects.
     </description>
+    <url>http://www.alexanderkiel.net/projects/junit-util/</url>
+    <inceptionYear>2010</inceptionYear>
 
     <developers>
         <developer>
@@ -24,11 +25,22 @@
         </developer>
     </developers>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <scm>
         <connection>scm:svn:https://svn.alexanderkiel.net/projects/junit-util/trunk</connection>
         <tag>HEAD</tag>
         <url>https://svn.alexanderkiel.net/projects/junit-util/trunk</url>
     </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
 
@@ -49,6 +61,24 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-5</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>bin</descriptorRef>
+                                <descriptorRef>src</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -66,6 +96,7 @@
                         <reports>
                             <report>dependencies</report>
                             <report>project-team</report>
+                            <report>license</report>
                             <report>scm</report>
                         </reports>
                     </reportSet>
@@ -123,10 +154,17 @@
     </reporting>
 
     <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>akiel</id>
+            <name>Alexander Kiel Repository</name>
+            <url>scp://mvn.alexanderkiel.net/home/mvnroot</url>
+            <layout>default</layout>
+        </repository>
         <site>
             <id>homepage</id>
-            <url>scp://alexanderkiel.net/var/www/www.alexanderkiel.net/www/static/projects/junit-util/</url>
-        </site>
+            <url>scp://www.alexanderkiel.net/var/www/www.alexanderkiel.net/www/static/projects/junit-util</url>
+        </site>        
     </distributionManagement>
 
 </project>
