@@ -6,7 +6,6 @@
         <menu name="Junit Util">
             <item name="Overview" href="index.html"/>
         </menu>
-        <menu ref="parent"/>
         <menu ref="reports"/>
     </body>
 </project>
