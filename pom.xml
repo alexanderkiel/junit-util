@@ -27,6 +27,13 @@
         <url>https://svn.alexanderkiel.net/projects/junit-util/trunk</url>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>Alexander Kiel Repository</id>
+            <url>http://mvn.alexanderkiel.net/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <dependency>
@@ -64,24 +71,6 @@
 
     <reporting>
         <plugins>
-            <plugin>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.1.2</version>
-                <configuration>
-                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>dependencies</report>
-                            <report>project-team</report>
-                            <report>license</report>
-                            <report>scm</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.5</version>
@@ -134,17 +123,15 @@
     </reporting>
 
     <distributionManagement>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>akiel</id>
-            <name>Alexander Kiel Repository</name>
-            <url>scp://mvn.alexanderkiel.net/home/mvnroot</url>
-            <layout>default</layout>
-        </repository>
         <site>
             <id>homepage</id>
             <url>scp://www.alexanderkiel.net/var/www/www.alexanderkiel.net/www/static/projects/junit-util</url>
         </site>
     </distributionManagement>
+
+    <ciManagement>
+        <system>hudson</system>
+        <url>https://hudson.alexanderkiel.net/job/junit-util/</url>
+    </ciManagement>
 
 </project>
