@@ -72,30 +72,12 @@
     <reporting>
         <plugins>
             <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.5</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.1</version>
-            </plugin>
-            <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
                 <configuration>
                     <links>
-                        <link>http://java.sun.com/javase/6/docs/api/</link>
                         <link>http://kentbeck.github.com/junit/javadoc/latest/</link>
                     </links>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>default</id>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
+                </configuration>                
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
