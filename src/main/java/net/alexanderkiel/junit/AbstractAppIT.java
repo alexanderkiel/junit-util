@@ -1,3 +1,19 @@
+/******************************************************************************
+ * Copyright 2010 Alexander Kiel                                              *
+ *                                                                            *
+ * Licensed under the Apache License, Version 2.0 (the "License");            *
+ * you may not use this file except in compliance with the License.           *
+ * You may obtain a copy of the License at                                    *
+ *                                                                            *
+ *     http://www.apache.org/licenses/LICENSE-2.0                             *
+ *                                                                            *
+ * Unless required by applicable law or agreed to in writing, software        *
+ * distributed under the License is distributed on an "AS IS" BASIS,          *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ * See the License for the specific language governing permissions and        *
+ * limitations under the License.                                             *
+ ******************************************************************************/
+
 package net.alexanderkiel.junit;
 
 import org.jetbrains.annotations.NotNull;
@@ -5,11 +21,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -36,6 +48,7 @@ import static org.junit.Assert.assertEquals;
  * <b>This class uses the commands {@code tar} and {@code rm}. So it is not portable.</b>
  *
  * @author Alexander Kiel
+ * @version $Id$
  */
 public abstract class AbstractAppIT implements AppExecutor {
 
@@ -61,18 +74,24 @@ public abstract class AbstractAppIT implements AppExecutor {
     public static void extractTarGz() throws Exception {
         Process process = Runtime.getRuntime().exec("tar -C target -xzf target/" + ASSEMBLY_NAME);
         process.waitFor();
-        Assert.assertEquals(0, process.exitValue());
+        assertEquals(0, process.exitValue());
     }
 
     @AfterClass
     public static void deleteExtractedDir() throws Exception {
         Process process = Runtime.getRuntime().exec("rm -r target/" + ARTIFACT_ID + "-" + VERSION);
         process.waitFor();
-        Assert.assertEquals(0, process.exitValue());
+        assertEquals(0, process.exitValue());
     }
 
     protected AppExecutor createAdditionalAppExecutor(@NotNull String appName) {
-        return new AppExecutorImpl(appName);
+        AppExecutor appExecutor = new AppExecutorImpl(Runtime.getRuntime());
+        appExecutor.setCommand(getCommand(appName));
+        return appExecutor;
+    }
+
+    private String getCommand(@NotNull String appName) {
+        return "target/" + ARTIFACT_ID + "-" + VERSION + "/bin/" + appName;
     }
 
     /**
@@ -80,7 +99,8 @@ public abstract class AbstractAppIT implements AppExecutor {
      */
     @Before
     public void prepareApp() {
-        defaultAppExecutor = new AppExecutorImpl(appName);
+        defaultAppExecutor = new AppExecutorImpl(Runtime.getRuntime());
+        defaultAppExecutor.setCommand(getCommand(appName));
     }
 
     /**
@@ -99,7 +119,7 @@ public abstract class AbstractAppIT implements AppExecutor {
     /**
      * Executes the application under test.
      *
-     * @throws IOException If an I/O error occurs.
+     * @throws IOException if an I/O error occurs.
      */
     public void executeApp() throws IOException {
         defaultAppExecutor.executeApp();
@@ -111,7 +131,7 @@ public abstract class AbstractAppIT implements AppExecutor {
      * Please specify the line without any line terminating characters.
      *
      * @param expectedLine the expected line of output.
-     * @throws IOException If an I/O error occurs.
+     * @throws IOException if an I/O error occurs.
      */
     public void assertLineOfOutput(@NotNull String expectedLine) throws IOException {
         defaultAppExecutor.assertLineOfOutput(expectedLine);
@@ -148,7 +168,7 @@ public abstract class AbstractAppIT implements AppExecutor {
     }
 
     /**
-     * Asserts that the application under tests terminates with a status code of zero.
+     * Asserts that the application under test terminates with a status code of zero.
      *
      * @throws InterruptedException if the current thread is {@link Thread#interrupt() interrupted} by another thread
      *                              while it is waiting for the application to terminate.
@@ -158,7 +178,7 @@ public abstract class AbstractAppIT implements AppExecutor {
     }
 
     /**
-     * Asserts that the application under tests terminates with the given status code.
+     * Asserts that the application under test terminates with the given status code.
      *
      * @param expectedStatusCode the expected status code.
      * @throws InterruptedException if the current thread is {@link Thread#interrupt() interrupted} by another thread
@@ -166,65 +186,5 @@ public abstract class AbstractAppIT implements AppExecutor {
      */
     public void assertExit(int expectedStatusCode) throws InterruptedException {
         defaultAppExecutor.assertExit(expectedStatusCode);
-    }
-
-    private class AppExecutorImpl implements AppExecutor {
-
-        private final List<String> args;
-        private Process process;
-        private BufferedReader standardOut;
-        private BufferedReader standardErr;
-
-        private AppExecutorImpl(String appName) {
-            this.args = new ArrayList<String>();
-            this.args.add("target/" + ARTIFACT_ID + "-" + VERSION + "/bin/" + appName);
-        }
-
-        public void addArg(@NotNull String arg) {
-            args.add(arg);
-        }
-
-        public void executeApp() throws IOException {
-            process = Runtime.getRuntime().exec(getArgsAsArray());
-
-            standardOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            standardErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-        }
-
-        private String[] getArgsAsArray() {
-            return args.toArray(new String[args.size()]);
-        }
-
-        public void assertLineOfOutput(@NotNull String expectedLine) throws IOException {
-            Assert.assertEquals("line of output on STDOUT", expectedLine, standardOut.readLine());
-        }
-
-        public void assertLineOfError(@NotNull String expectedLine) throws IOException {
-            Assert.assertEquals("line of output on STDERR", expectedLine, standardErr.readLine());
-        }
-
-        public void assertNoMoreOutput() throws IOException {
-            Assert.assertEquals("no more output on STDOUT", "", getAllLines(standardOut));
-        }
-
-        private String getAllLines(BufferedReader reader) throws IOException {
-            StringBuilder sb = new StringBuilder();
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                sb.append(line).append('\n');
-            }
-            return sb.toString();
-        }
-
-        public void assertNoMoreErrors() throws IOException {
-            Assert.assertEquals("no more output on STDERR", "", getAllLines(standardErr));
-        }
-
-        public void assertNormalExit() throws InterruptedException {
-            assertExit(0);
-        }
-
-        public void assertExit(int expectedStatusCode) throws InterruptedException {
-            Assert.assertEquals(expectedStatusCode, process.waitFor());
-        }
     }
 }
