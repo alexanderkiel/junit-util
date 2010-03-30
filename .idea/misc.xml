@@ -219,6 +219,9 @@
     <option name="INTEGRATE_REVERT_UNCHANGED" value="true" />
     <option name="SERVER_TIMEOUT" value="20000" />
   </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="junit-util" />
+  </component>
   <component name="ProjectKey">
     <option name="state" value="project://default" />
   </component>
