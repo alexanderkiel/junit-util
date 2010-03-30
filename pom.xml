@@ -106,8 +106,6 @@
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
                     <findbugsXmlOutput>true</findbugsXmlOutput>
                     <xmlOutput>true</xmlOutput>
                 </configuration>
@@ -117,7 +115,7 @@
 
     <distributionManagement>
         <site>
-            <id>homepage</id>
+            <id>www.alexanderkiel.net</id>
             <url>scp://www.alexanderkiel.net/var/www/www.alexanderkiel.net/www/static/projects/junit-util</url>
         </site>
     </distributionManagement>
