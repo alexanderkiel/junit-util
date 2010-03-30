@@ -84,6 +84,7 @@ public abstract class AbstractAppIT implements AppExecutor {
         assertEquals(0, process.exitValue());
     }
 
+    @NotNull
     protected AppExecutor createAdditionalAppExecutor(@NotNull String appName) {
         AppExecutor appExecutor = new AppExecutorImpl(Runtime.getRuntime());
         appExecutor.setCommand(getCommand(appName));
