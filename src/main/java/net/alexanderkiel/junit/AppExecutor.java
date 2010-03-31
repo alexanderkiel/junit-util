@@ -26,13 +26,6 @@ import java.io.IOException;
 public interface AppExecutor {
 
     /**
-     * Sets the command name of the application of this app executor.
-     *
-     * @param command the command name.
-     */
-    void setCommand(@NotNull String command);
-
-    /**
      * Adds one command-line argument to the application of this app executor.
      *
      * @param arg the command-line argument

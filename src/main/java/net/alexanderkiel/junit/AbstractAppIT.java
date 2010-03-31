@@ -58,7 +58,7 @@ public abstract class AbstractAppIT implements AppExecutor {
     static final String ASSEMBLY_NAME = ARTIFACT_ID + "-" + VERSION + "-" + CLASSIFIER + ".tar.gz";
 
     private final String appName;
-    private AppExecutor defaultAppExecutor;
+    private AppExecutorImpl defaultAppExecutor;
 
     /**
      * Subclasses have to call this constructor to specify the name of the application under test.
@@ -71,22 +71,42 @@ public abstract class AbstractAppIT implements AppExecutor {
     }
 
     @BeforeClass
+    public static void setupClass() throws Exception {
+        verifySystemProperties();
+        extractTarGz();
+    }
+
+    public static void verifySystemProperties() throws Exception {
+        if (ARTIFACT_ID == null) {
+            throw new AssertionError("Expected that the Java system property 'project-artifact-id' is set to the " +
+                    "maven artifact id of the assembly to test.");
+        }
+        if (VERSION == null) {
+            throw new AssertionError("Expected that the Java system property 'project-version' is set to the " +
+                    "maven version of the assembly to test.");
+        }
+        if (CLASSIFIER == null) {
+            throw new AssertionError("Expected that the Java system property 'classifier' is set to the " +
+                    "maven classifier of the assembly to test.");
+        }
+    }
+
     public static void extractTarGz() throws Exception {
         Process process = Runtime.getRuntime().exec("tar -C target -xzf target/" + ASSEMBLY_NAME);
         process.waitFor();
-        assertEquals(0, process.exitValue());
+        assertEquals("tar extraction process returns a status code of", 0, process.exitValue());
     }
 
     @AfterClass
     public static void deleteExtractedDir() throws Exception {
         Process process = Runtime.getRuntime().exec("rm -r target/" + ARTIFACT_ID + "-" + VERSION);
         process.waitFor();
-        assertEquals(0, process.exitValue());
+        assertEquals("rm process returns a status code of", 0, process.exitValue());
     }
 
     @NotNull
     protected AppExecutor createAdditionalAppExecutor(@NotNull String appName) {
-        AppExecutor appExecutor = new AppExecutorImpl(Runtime.getRuntime());
+        AppExecutorImpl appExecutor = new AppExecutorImpl(Runtime.getRuntime());
         appExecutor.setCommand(getCommand(appName));
         return appExecutor;
     }

@@ -44,6 +44,11 @@ class AppExecutorImpl implements AppExecutor {
         this.runtime = runtime;
     }
 
+    /**
+     * Sets the command name of the application of this app executor.
+     *
+     * @param command the command name.
+     */
     public void setCommand(@NotNull String command) {
         this.commandSet = true;
         args.add(command);
