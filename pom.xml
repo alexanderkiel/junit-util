@@ -29,8 +29,15 @@
 
     <repositories>
         <repository>
-            <id>Alexander Kiel Repository</id>
-            <url>http://mvn.alexanderkiel.net/</url>
+            <id>akiel-snapshots</id>
+            <name>Alexander Kiel Snapshot Repository</name>
+            <url>http://mvn.alexanderkiel.net/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
