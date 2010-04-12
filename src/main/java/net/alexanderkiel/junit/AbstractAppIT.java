@@ -21,9 +21,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This JUnit 4 test class is a base for integration tests of command-line applications which are packed by maven as a
@@ -56,6 +58,8 @@ public abstract class AbstractAppIT implements AppExecutor {
     static final String VERSION = System.getProperty("project-version");
     static final String CLASSIFIER = System.getProperty("classifier");
     static final String ASSEMBLY_NAME = ARTIFACT_ID + "-" + VERSION + "-" + CLASSIFIER + ".tar.gz";
+    static final File TARGET_DIR = new File("target");
+    static final File ASSEMBLY_FILE = new File(TARGET_DIR, ASSEMBLY_NAME);
 
     private final String appName;
     private AppExecutorImpl defaultAppExecutor;
@@ -73,6 +77,7 @@ public abstract class AbstractAppIT implements AppExecutor {
     @BeforeClass
     public static void setupClass() throws Exception {
         verifySystemProperties();
+        verifyFiles();
         extractTarGz();
     }
 
@@ -91,8 +96,17 @@ public abstract class AbstractAppIT implements AppExecutor {
         }
     }
 
+    private static void verifyFiles() {
+        assertTrue(TARGET_DIR.getAbsolutePath() + " exists", TARGET_DIR.exists());
+        assertTrue(TARGET_DIR.getAbsolutePath() + " is a directory", TARGET_DIR.isDirectory());
+        assertTrue("directory " + TARGET_DIR.getAbsolutePath() + " is readable", TARGET_DIR.canRead());
+        assertTrue(ASSEMBLY_FILE.getAbsolutePath() + " exists", ASSEMBLY_FILE.exists());
+        assertTrue(ASSEMBLY_FILE.getAbsolutePath() + " is a file", ASSEMBLY_FILE.isFile());
+        assertTrue("file " + ASSEMBLY_FILE.getAbsolutePath() + " is readable", ASSEMBLY_FILE.canRead());
+    }
+
     public static void extractTarGz() throws Exception {
-        Process process = Runtime.getRuntime().exec("tar -C target -xzf target/" + ASSEMBLY_NAME);
+        Process process = Runtime.getRuntime().exec("tar -C target -xzf " + ASSEMBLY_FILE.getPath());
         process.waitFor();
         assertEquals("tar extraction process returns a status code of", 0, process.exitValue());
     }
@@ -135,6 +149,19 @@ public abstract class AbstractAppIT implements AppExecutor {
             throw new IllegalStateException("Illegal state: prepareApp() was not called by JUnit 4.");
         }
         defaultAppExecutor.addArg(arg);
+    }
+
+    /**
+     * Adds command-line arguments to the application under test.
+     *
+     * @param args one or more command-line arguments
+     * @see #executeApp()
+     */
+    public void addArgs(String... args) {
+        if (defaultAppExecutor == null) {
+            throw new IllegalStateException("Illegal state: prepareApp() was not called by JUnit 4.");
+        }
+        defaultAppExecutor.addArgs(args);
     }
 
     /**

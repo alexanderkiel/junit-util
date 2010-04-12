@@ -89,6 +89,43 @@ public class AppExecutorImplTest {
     }
 
     @Test
+    public void testExecuteAppWithTwoArguments() throws Exception {
+        given(runtime.exec(new String[]{"foo", "bar", "baz"})).willReturn(process);
+        given(process.getInputStream()).willReturn(getInputStream("normal output"));
+        given(process.getErrorStream()).willReturn(getInputStream("error"));
+        given(process.waitFor()).willReturn(0);
+
+        appExecutor.setCommand("foo");
+        appExecutor.addArg("bar");
+        appExecutor.addArg("baz");
+        appExecutor.executeApp();
+
+        appExecutor.assertLineOfOutput("normal output");
+        appExecutor.assertLineOfError("error");
+        appExecutor.assertNoMoreOutput();
+        appExecutor.assertNoMoreErrors();
+        appExecutor.assertNormalExit();
+    }
+
+    @Test
+    public void testExecuteAppWithTwoArgumentsUsingTheArgsMethod() throws Exception {
+        given(runtime.exec(new String[]{"foo", "bar", "baz"})).willReturn(process);
+        given(process.getInputStream()).willReturn(getInputStream("normal output"));
+        given(process.getErrorStream()).willReturn(getInputStream("error"));
+        given(process.waitFor()).willReturn(0);
+
+        appExecutor.setCommand("foo");
+        appExecutor.addArgs("bar", "baz");
+        appExecutor.executeApp();
+
+        appExecutor.assertLineOfOutput("normal output");
+        appExecutor.assertLineOfError("error");
+        appExecutor.assertNoMoreOutput();
+        appExecutor.assertNoMoreErrors();
+        appExecutor.assertNormalExit();
+    }
+
+    @Test
     public void testExecuteAppWithTwoLinesOfOutput() throws Exception {
         given(runtime.exec(new String[]{"foo"})).willReturn(process);
         given(process.getInputStream()).willReturn(getInputStream("first line\nsecond line"));

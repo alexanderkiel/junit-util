@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -56,6 +57,10 @@ class AppExecutorImpl implements AppExecutor {
 
     public void addArg(@NotNull String arg) {
         args.add(arg);
+    }
+
+    public void addArgs(String... args) {
+        this.args.addAll(asList(args));
     }
 
     public void executeApp() throws IOException {

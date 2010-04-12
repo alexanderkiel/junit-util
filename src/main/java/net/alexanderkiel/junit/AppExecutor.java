@@ -34,6 +34,14 @@ public interface AppExecutor {
     void addArg(@NotNull String arg);
 
     /**
+     * Adds command-line arguments to the application of this app executor.
+     *
+     * @param args one or more command-line arguments
+     * @see #executeApp()
+     */
+    void addArgs(String... args);
+
+    /**
      * Executes the application of this app executor.
      *
      * @throws IOException           if an I/O error occurs.
