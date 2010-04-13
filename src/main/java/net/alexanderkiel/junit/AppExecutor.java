@@ -99,4 +99,11 @@ public interface AppExecutor {
      *                              while it is waiting for the application to terminate.
      */
     void assertExit(int expectedStatusCode) throws InterruptedException;
+
+    /**
+     * Kills the application.
+     * <p/>
+     * This may be useful if you test a daemon process which will not exit itself.
+     */
+    void destroy();
 }

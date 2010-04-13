@@ -235,4 +235,13 @@ public abstract class AbstractAppIT implements AppExecutor {
     public void assertExit(int expectedStatusCode) throws InterruptedException {
         defaultAppExecutor.assertExit(expectedStatusCode);
     }
+
+    /**
+     * Kills the application under test.
+     * <p/>
+     * This may be useful if you test a daemon process which will not exit itself.
+     */
+    public void destroy() {
+        defaultAppExecutor.destroy();
+    }
 }

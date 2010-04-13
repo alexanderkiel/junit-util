@@ -28,6 +28,7 @@ import java.io.InputStream;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Alexander Kiel
@@ -178,6 +179,19 @@ public class AppExecutorImplTest {
         appExecutor.assertNoMoreOutput();
         appExecutor.assertNoMoreErrors();
         appExecutor.assertExit(1);
+    }
+
+    @Test
+    public void testDestroy() throws Exception {
+        given(runtime.exec(new String[]{"foo"})).willReturn(process);
+        given(process.getInputStream()).willReturn(getInputStream(""));
+        given(process.getErrorStream()).willReturn(getInputStream(""));
+
+        appExecutor.setCommand("foo");
+        appExecutor.executeApp();
+
+        appExecutor.destroy();
+        verify(process).destroy();
     }
 
     private InputStream getInputStream(String text) {

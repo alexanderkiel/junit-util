@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -107,6 +108,22 @@ class AppExecutorImpl implements AppExecutor {
     }
 
     public void assertExit(int expectedStatusCode) throws InterruptedException {
-        assertEquals(expectedStatusCode, process.waitFor());
+        assertEquals(displayCommand() + " status code is", expectedStatusCode, process.waitFor());
+    }
+
+    private String displayCommand() {
+        StringBuffer sb = new StringBuffer();
+        for (Iterator<String> iterator = args.iterator(); iterator.hasNext();) {
+            String arg = iterator.next();
+            sb.append(arg);
+            if (iterator.hasNext()) {
+                sb.append(' ');
+            }
+        }
+        return sb.toString();
+    }
+
+    public void destroy() {
+        process.destroy();
     }
 }
