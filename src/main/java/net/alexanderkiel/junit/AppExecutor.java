@@ -60,6 +60,17 @@ public interface AppExecutor {
     void assertLineOfOutput(@NotNull String expectedLine) throws IOException;
 
     /**
+     * Asserts that the application of this app executor outputs a line on {@link System#out STDOUT} which matches the
+     * given {@link java.util.regex.Pattern regular expression}.
+     * <p/>
+     * Please specify the regular expression without any line terminating characters.
+     *
+     * @param expectedLineRegExp the regular expression used to match the line of output.
+     * @throws IOException if an I/O error occurs.
+     */
+    void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException;
+
+    /**
      * Asserts that the application of this app executor outputs the given expectedLine on {@link System#err STDERR}.
      * <p/>
      * Please specify the expectedLine without any expectedLine terminating characters.
@@ -68,6 +79,17 @@ public interface AppExecutor {
      * @throws IOException if an I/O error occurs.
      */
     void assertLineOfError(@NotNull String expectedLine) throws IOException;
+
+    /**
+     * Asserts that the application of this app executor outputs a line on {@link System#err STDERR} which matches the
+     * given {@link java.util.regex.Pattern regular expression}.
+     * <p/>
+     * Please specify the regular expression without any line terminating characters.
+     *
+     * @param expectedLineRegExp the regular expression used to match the line of output.
+     * @throws IOException if an I/O error occurs.
+     */
+    void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException;
 
     /**
      * Asserts that there is no more output on {@link System#out STDOUT} of the application of this app executor.

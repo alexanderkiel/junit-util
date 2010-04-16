@@ -186,6 +186,19 @@ public abstract class AbstractAppIT implements AppExecutor {
     }
 
     /**
+     * Asserts that the application under test of this app executor outputs a line on {@link System#out STDOUT} which
+     * matches the given regular expression.
+     * <p/>
+     * Please specify the regular expression without any line terminating characters.
+     *
+     * @param expectedLineRegExp the regular expression used to match the line of output.
+     * @throws IOException if an I/O error occurs.
+     */
+    public void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException {
+        defaultAppExecutor.assertLineOfOutputMatches(expectedLineRegExp);
+    }
+
+    /**
      * Asserts that the application under test outputs the given expectedLine on {@link System#err STDERR}.
      * <p/>
      * Please specify the expectedLine without any expectedLine terminating characters.
@@ -195,6 +208,19 @@ public abstract class AbstractAppIT implements AppExecutor {
      */
     public void assertLineOfError(@NotNull String expectedLine) throws IOException {
         defaultAppExecutor.assertLineOfError(expectedLine);
+    }
+
+    /**
+     * Asserts that the application under test of this app executor outputs a line on {@link System#err STDERR} which
+     * matches the given regular expression.
+     * <p/>
+     * Please specify the regular expression without any line terminating characters.
+     *
+     * @param expectedLineRegExp the regular expression used to match the line of output.
+     * @throws IOException if an I/O error occurs.
+     */
+    public void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException {
+        defaultAppExecutor.assertLineOfErrorMatches(expectedLineRegExp);
     }
 
     /**

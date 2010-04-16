@@ -194,6 +194,64 @@ public class AppExecutorImplTest {
         verify(process).destroy();
     }
 
+    @Test
+    public void testLineOfOutputMatches() throws Exception {
+        given(runtime.exec(new String[]{"foo"})).willReturn(process);
+        given(process.getInputStream()).willReturn(getInputStream("aaa"));
+        given(process.getErrorStream()).willReturn(getInputStream(""));
+        given(process.waitFor()).willReturn(0);
+
+        appExecutor.setCommand("foo");
+        appExecutor.executeApp();
+
+        appExecutor.assertLineOfOutputMatches("a{3}");
+        appExecutor.assertNoMoreOutput();
+        appExecutor.assertNoMoreErrors();
+        appExecutor.assertNormalExit();
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testLineOfOutputMatchesNot() throws Exception {
+        given(runtime.exec(new String[]{"foo"})).willReturn(process);
+        given(process.getInputStream()).willReturn(getInputStream("aaaa"));
+        given(process.getErrorStream()).willReturn(getInputStream(""));
+        given(process.waitFor()).willReturn(0);
+
+        appExecutor.setCommand("foo");
+        appExecutor.executeApp();
+
+        appExecutor.assertLineOfOutputMatches("a{3}");
+    }
+
+    @Test
+    public void testLineOfErrorMatches() throws Exception {
+        given(runtime.exec(new String[]{"foo"})).willReturn(process);
+        given(process.getInputStream()).willReturn(getInputStream(""));
+        given(process.getErrorStream()).willReturn(getInputStream("aaa"));
+        given(process.waitFor()).willReturn(1);
+
+        appExecutor.setCommand("foo");
+        appExecutor.executeApp();
+
+        appExecutor.assertLineOfErrorMatches("a{3}");
+        appExecutor.assertNoMoreOutput();
+        appExecutor.assertNoMoreErrors();
+        appExecutor.assertExit(1);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testLineOfErrorMatchesNot() throws Exception {
+        given(runtime.exec(new String[]{"foo"})).willReturn(process);
+        given(process.getInputStream()).willReturn(getInputStream(""));
+        given(process.getErrorStream()).willReturn(getInputStream("aaaa"));
+        given(process.waitFor()).willReturn(1);
+
+        appExecutor.setCommand("foo");
+        appExecutor.executeApp();
+
+        appExecutor.assertLineOfErrorMatches("a{3}");
+    }
+
     private InputStream getInputStream(String text) {
         return new ByteArrayInputStream(text.getBytes());
     }

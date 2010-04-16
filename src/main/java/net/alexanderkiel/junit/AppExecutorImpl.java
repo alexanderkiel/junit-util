@@ -27,6 +27,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Alexander Kiel
@@ -83,8 +84,22 @@ class AppExecutorImpl implements AppExecutor {
         assertEquals("line of output on STDOUT", expectedLine, standardOut.readLine());
     }
 
+    public void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException {
+        String line = standardOut.readLine();
+        assertTrue(getMatchingMessage("STDOUT", expectedLineRegExp, line), line.matches(expectedLineRegExp));
+    }
+
+    private String getMatchingMessage(String streamName, String expectedLineRegExp, String line) {
+        return String.format("line of output on %s matches /%s/ but was: %s", streamName, expectedLineRegExp, line);
+    }
+
     public void assertLineOfError(@NotNull String expectedLine) throws IOException {
         assertEquals("line of output on STDERR", expectedLine, standardErr.readLine());
+    }
+
+    public void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException {
+        String line = standardErr.readLine();
+        assertTrue(getMatchingMessage("STDERR", expectedLineRegExp, line), line.matches(expectedLineRegExp));
     }
 
     public void assertNoMoreOutput() throws IOException {
