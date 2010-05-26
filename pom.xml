@@ -2,144 +2,144 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>net.alexanderkiel</groupId>
-        <artifactId>alexanderkiel-opensource</artifactId>
-        <version>0.1</version>
-    </parent>
+	<parent>
+		<groupId>net.alexanderkiel</groupId>
+		<artifactId>alexanderkiel-opensource</artifactId>
+		<version>0.1</version>
+	</parent>
 
-    <groupId>net.alexanderkiel</groupId>
-    <artifactId>junit-util</artifactId>
-    <version>0.2-SNAPSHOT</version>
+	<groupId>net.alexanderkiel</groupId>
+	<artifactId>junit-util</artifactId>
+	<version>0.2-SNAPSHOT</version>
 
-    <name>Junit Util</name>
-    <description>
-        Junit Util contains common assertions which extend the junit assertions and are helpful in many projects.
-    </description>
-    <url>http://www.alexanderkiel.net/projects/junit-util/</url>
-    <inceptionYear>2010</inceptionYear>
+	<name>Junit Util</name>
+	<description>
+		Junit Util contains common assertions which extend the junit assertions and are helpful in many projects.
+	</description>
+	<url>http://www.alexanderkiel.net/projects/junit-util/</url>
+	<inceptionYear>2010</inceptionYear>
 
-    <scm>
-        <connection>scm:svn:https://svn.alexanderkiel.net/projects/junit-util/trunk</connection>
-        <url>https://svn.alexanderkiel.net/projects/junit-util/trunk</url>
-    </scm>
+	<scm>
+		<connection>scm:svn:https://svn.alexanderkiel.net/projects/junit-util/trunk</connection>
+		<url>https://svn.alexanderkiel.net/projects/junit-util/trunk</url>
+	</scm>
 
-    <repositories>
-        <repository>
-            <id>akiel-snapshots</id>
-            <name>Alexander Kiel Repository</name>
-            <url>http://mvn.alexanderkiel.net/releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>akiel-snapshots</id>
-            <name>Alexander Kiel Snapshot Repository</name>
-            <url>http://mvn.alexanderkiel.net/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>akiel</id>
+			<name>Alexander Kiel Repository</name>
+			<url>http://mvn.alexanderkiel.net/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>akiel-snapshots</id>
+			<name>Alexander Kiel Snapshot Repository</name>
+			<url>http://mvn.alexanderkiel.net/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
-    <dependencies>
+	<dependencies>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+		</dependency>
 
-        <dependency>
-            <groupId>com.intellij</groupId>
-            <artifactId>annotations</artifactId>
-            <version>7.0.3</version>
-        </dependency>
+		<dependency>
+			<groupId>com.intellij</groupId>
+			<artifactId>annotations</artifactId>
+			<version>7.0.3</version>
+		</dependency>
 
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.8.2</version>
-            <scope>test</scope>
-        </dependency>
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.2</version>
+			<scope>test</scope>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>bin</descriptorRef>
-                                <descriptorRef>src</descriptorRef>
-                            </descriptorRefs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>bin</descriptorRef>
+								<descriptorRef>src</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <links>
-                        <link>http://kentbeck.github.com/junit/javadoc/latest/</link>
-                    </links>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <formats>
-                        <format>html</format>
-                        <format>xml</format>
-                    </formats>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <findbugsXmlOutput>true</findbugsXmlOutput>
-                    <xmlOutput>true</xmlOutput>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<links>
+						<link>http://kentbeck.github.com/junit/javadoc/latest/</link>
+					</links>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<formats>
+						<format>html</format>
+						<format>xml</format>
+					</formats>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<findbugsXmlOutput>true</findbugsXmlOutput>
+					<xmlOutput>true</xmlOutput>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
-    <distributionManagement>
-        <site>
-            <id>www.alexanderkiel.net</id>
-            <url>scp://www.alexanderkiel.net/var/www/www.alexanderkiel.net/www/static/projects/junit-util</url>
-        </site>
-    </distributionManagement>
+	<distributionManagement>
+		<site>
+			<id>www.alexanderkiel.net</id>
+			<url>scp://www.alexanderkiel.net/var/www/www.alexanderkiel.net/www/static/projects/junit-util</url>
+		</site>
+	</distributionManagement>
 
-    <ciManagement>
-        <system>hudson</system>
-        <url>https://hudson.alexanderkiel.net/job/junit-util/</url>
-    </ciManagement>
+	<ciManagement>
+		<system>hudson</system>
+		<url>https://hudson.alexanderkiel.net/job/junit-util/</url>
+	</ciManagement>
 
 </project>
