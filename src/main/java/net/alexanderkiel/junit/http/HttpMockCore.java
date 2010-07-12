@@ -16,16 +16,19 @@
 
 package net.alexanderkiel.junit.http;
 
+import com.sun.net.httpserver.Filter;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
-import static net.alexanderkiel.junit.http.HttpMock.Method.GET;
+import static java.util.Collections.singletonList;
 
 /**
  * @author Alexander Kiel
@@ -36,19 +39,26 @@ class HttpMockCore {
 	private static final int THREAD_POOL_SIZE = 10;
 
 	private final HttpServer httpServer;
-	private final Headers commonHeaders;
+	private final String contextPath;
 
-	HttpMockCore(@NotNull HttpServer httpServer) {
+	private DefaultHandler defaultHandler;
+	private CommonHeaderFilter commonHeaderFilter;
+
+	HttpMockCore(@NotNull HttpServer httpServer, @NotNull String contextPath) {
 		this.httpServer = httpServer;
-		commonHeaders = new Headers();
+		this.contextPath = contextPath;
 	}
 
 	void init() {
 		httpServer.setExecutor(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
-		httpServer.createContext("/", new CatchAllHandler());
+
+		defaultHandler = new DefaultHandler(URI.create(contextPath));
+		commonHeaderFilter = new CommonHeaderFilter();
+		httpServer.createContext(contextPath, defaultHandler).getFilters().add(commonHeaderFilter);
+		httpServer.createContext("/", new CatchAllHandler()).getFilters().add(commonHeaderFilter);
 	}
 
-	void start(String context) {
+	void start() {
 		httpServer.start();
 	}
 
@@ -56,39 +66,53 @@ class HttpMockCore {
 		httpServer.stop(0);
 	}
 
-	void setCommonHeader(String name, String value) {
-		commonHeaders.set(name, value);
+	void setCommonHeader(@NotNull String name, @NotNull String value) {
+		commonHeaderFilter.setHeader(name, value);
 	}
 
 	OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path) {
-		return new ReadonlyOngoingMocking(httpServer, commonHeaders, method, path);
+		ReadonlyOngoingMocking mocking = new ReadonlyOngoingMocking();
+		defaultHandler.registerSubHandler(method, path, mocking);
+		return mocking;
 	}
 
 	OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path, @NotNull String payload) {
-		return new WritableOngoingMocking(httpServer, commonHeaders, method, path, payload);
+		WritableOngoingMocking mocking = new WritableOngoingMocking(payload);
+		defaultHandler.registerSubHandler(method, path, mocking);
+		return mocking;
 	}
 
 	@Override
 	public String toString() {
-		return "HttpMockCore[httpServer.address = " + httpServer.getAddress() + "]";
+		return "HttpMockCore[httpServer.address = " + httpServer.getAddress() + ", contextPath = '" + contextPath + "']";
 	}
 
-	private class CatchAllHandler implements HttpHandler {
+	private static class CommonHeaderFilter extends Filter {
 
-		public void handle(HttpExchange httpExchange) throws IOException {
-			if (isGetRequest(httpExchange)) {
-				setCommonHeaders(httpExchange.getResponseHeaders());
-				httpExchange.sendResponseHeaders(404, -1);
-				httpExchange.close();
-			}
+		private final Map<String, List<String>> commonHeaders;
+
+		private CommonHeaderFilter() {
+			commonHeaders = new Headers();
 		}
 
-		private boolean isGetRequest(HttpExchange httpExchange) {
-			return GET.name().equals(httpExchange.getRequestMethod());
+		void setHeader(String name, String value) {
+			commonHeaders.put(name, singletonList(value));
 		}
 
-		private void setCommonHeaders(Headers responseHeaders) {
-			responseHeaders.putAll(commonHeaders);
+		@Override
+		public void doFilter(HttpExchange httpExchange, Chain chain) throws IOException {
+			httpExchange.getResponseHeaders().putAll(commonHeaders);
+			chain.doFilter(httpExchange);
+		}
+
+		@Override
+		public String description() {
+			return "Sets common response headers.";
+		}
+
+		@Override
+		public String toString() {
+			return "CommonHeaderFilter[commonHeaders = " + commonHeaders + "]";
 		}
 	}
 }

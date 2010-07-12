@@ -29,15 +29,19 @@ public class EmptyResponse extends BaseResponse {
 	}
 
 	public String getContentType() {
-		throw new UnsupportedOperationException("An empty response has no ContentType.");
+		throw new UnsupportedOperationException("This response doesn't have a body.");
+	}
+
+	public boolean hasBody() {
+		return false;
 	}
 
 	public long getBodyLength() {
-		return -1;
+		throw new UnsupportedOperationException("This response doesn't have a body.");
 	}
 
 	public InputStream getBodyInputStream() {
-		throw new UnsupportedOperationException("An empty response has no InputStream.");
+		throw new UnsupportedOperationException("This response doesn't have a body.");
 	}
 
 	@Override

@@ -32,6 +32,8 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class HttpMockCoreTest {
 
+	private static final String CONTEXT_PATH = "foo";
+
 	private HttpMockCore httpMock;
 
 	@Mock
@@ -39,12 +41,12 @@ public class HttpMockCoreTest {
 
 	@Before
 	public void setUp() throws Exception {
-		httpMock = new HttpMockCore(httpServer);
+		httpMock = new HttpMockCore(httpServer, CONTEXT_PATH);
 	}
 
 	@Test
 	public void testStart() throws Exception {
-		httpMock.start("");
+		httpMock.start();
 
 		verify(httpServer).start();
 	}

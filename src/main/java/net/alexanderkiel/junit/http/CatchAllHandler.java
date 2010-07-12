@@ -16,42 +16,29 @@
 
 package net.alexanderkiel.junit.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+
+import java.io.IOException;
+
+import static net.alexanderkiel.junit.http.HttpMock.Method.GET;
 
 /**
  * @author Alexander Kiel
  * @version $Id$
  */
-public class StringResponse extends BaseResponse {
+class CatchAllHandler implements HttpHandler {
 
-	private final String contentType;
-	private final String body;
+	private static final int NOT_FOUND = 404;
 
-	public StringResponse(int statusCode, String contentType, String body) {
-		super(statusCode);
-		this.contentType = contentType;
-		this.body = body;
+	public void handle(HttpExchange httpExchange) throws IOException {
+		if (isGetRequest(httpExchange)) {
+			httpExchange.sendResponseHeaders(NOT_FOUND, -1);
+			httpExchange.close();
+		}
 	}
 
-	public String getContentType() {
-		return contentType;
-	}
-
-	public boolean hasBody() {
-		return true;
-	}
-
-	public long getBodyLength() {
-		return body.length();
-	}
-
-	public InputStream getBodyInputStream() {
-		return new ByteArrayInputStream(body.getBytes(UTF_8));
-	}
-
-	@Override
-	public String toString() {
-		return "StringResponse[" + super.toString() + ", contentType = '" + contentType + "', body = '" + body + "']";
+	private static boolean isGetRequest(HttpExchange httpExchange) {
+		return GET.name().equals(httpExchange.getRequestMethod());
 	}
 }

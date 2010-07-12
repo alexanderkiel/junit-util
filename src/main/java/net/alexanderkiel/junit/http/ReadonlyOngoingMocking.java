@@ -17,12 +17,8 @@
 package net.alexanderkiel.junit.http;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Alexander Kiel
@@ -30,26 +26,15 @@ import java.util.Map;
  */
 class ReadonlyOngoingMocking extends BaseOngoingMocking {
 
-	ReadonlyOngoingMocking(@NotNull HttpServer httpServer, @NotNull Map<String, List<String>> commonHeaders,
-	                       @NotNull HttpMock.Method method, @NotNull String path) {
-		super(path, commonHeaders, method, httpServer);
+	public void handle(HttpExchange httpExchange) throws IOException {
+		setResponseHeaders(httpExchange.getResponseHeaders());
+		sendResponseHeaders(httpExchange);
+		sendResponseBody(httpExchange.getResponseBody());
+		httpExchange.close();
 	}
 
-	public void willRespond(@NotNull Response response) {
-		httpServer.createContext(path, new MyHttpHandler(response));
-	}
-
-	private class MyHttpHandler extends BaseHttpHandler {
-
-		private MyHttpHandler(@NotNull Response response) {
-			super(response);
-		}
-
-		@Override
-		void handleRequest(HttpExchange httpExchange) throws IOException {
-			setResponseHeaders(httpExchange.getResponseHeaders());
-			sendResponseHeaders(httpExchange);
-			sendResponseBody(httpExchange.getResponseBody());
-		}
+	@Override
+	public String toString() {
+		return "ReadonlyOngoingMocking[" + super.toString() + "]";
 	}
 }

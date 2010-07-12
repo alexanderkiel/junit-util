@@ -19,104 +19,69 @@ package net.alexanderkiel.junit.http;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
- * @author <a href="alexander.kiel@life.uni-leipzig.de">Alexander Kiel</a>
+ * @author Alexander Kiel
  * @version $Id$
  */
-abstract class BaseOngoingMocking implements OngoingMocking {
+abstract class BaseOngoingMocking implements OngoingMocking, HttpHandler {
 
-	protected final HttpServer httpServer;
-	protected final Map<String, List<String>> commonHeaders;
-	protected final String path;
-	protected final HttpMock.Method method;
+	static final int BUFFER_SIZE = 1024;
 
-	BaseOngoingMocking(@NotNull String path, @NotNull Map<String, List<String>> commonHeaders,
-	                   @NotNull HttpMock.Method method, @NotNull HttpServer httpServer) {
-		this.path = path;
-		this.commonHeaders = new HashMap<String, List<String>>(commonHeaders);
-		this.method = method;
-		this.httpServer = httpServer;
+	private final byte[] buffer;
+	private Response response;
+
+	BaseOngoingMocking() {
+		buffer = new byte[BUFFER_SIZE];
 	}
 
-	abstract class BaseHttpHandler implements HttpHandler {
+	public void willRespond(@NotNull Response response) {
+		this.response = response;
+	}
 
-		static final int BUFFER_SIZE = 1024;
-
-		final Response response;
-		final byte[] buffer;
-
-		BaseHttpHandler(@NotNull Response response) {
-			this.response = response;
-			buffer = new byte[BUFFER_SIZE];
+	void setResponseHeaders(Headers headers) {
+		if (response.hasBody()) {
+			headers.set("Content-Type", response.getContentType());
 		}
+	}
 
-		public final void handle(HttpExchange httpExchange) throws IOException {
-			setCommonHeaders(httpExchange.getResponseHeaders());
-
-			if (!doesRequestMethodMatch(httpExchange)) {
-				httpExchange.sendResponseHeaders(405, -1);
-			} else if (!doesPathMatch(httpExchange)) {
-				httpExchange.sendResponseHeaders(404, -1);
-			} else {
-				handleRequest(httpExchange);
-			}
-			httpExchange.close();
-		}
-
-		protected boolean doesRequestMethodMatch(HttpExchange httpExchange) {
-			return httpExchange.getRequestMethod().equals(method.toString());
-		}
-
-		private boolean doesPathMatch(HttpExchange httpExchange) {
-			return httpExchange.getRequestURI().toString().endsWith(path);
-		}
-
-		abstract void handleRequest(HttpExchange httpExchange) throws IOException;
-
-		protected void setCommonHeaders(Headers responseHeaders) {
-			responseHeaders.putAll(commonHeaders);
-		}
-
-		protected void setResponseHeaders(Headers headers) {
-			if (response.getBodyLength() >= 0) {
-				headers.set("Content-Type", response.getContentType());
-			}
-		}
-
-		protected void sendResponseHeaders(HttpExchange httpExchange) throws IOException {
+	void sendResponseHeaders(HttpExchange httpExchange) throws IOException {
+		if (response.hasBody()) {
 			httpExchange.sendResponseHeaders(response.getStatusCode(), response.getBodyLength());
+		} else {
+			httpExchange.sendResponseHeaders(response.getStatusCode(), -1);
 		}
+	}
 
-		protected void sendResponseBody(OutputStream responseBodyOutputStream) throws IOException {
-			if (response.getBodyLength() >= 0) {
-				copyBody(responseBodyOutputStream);
-			} else {
-				responseBodyOutputStream.close();
-			}
+	void sendResponseBody(OutputStream responseBodyOutputStream) throws IOException {
+		if (response.hasBody()) {
+			copyBody(responseBodyOutputStream);
+		} else {
+			responseBodyOutputStream.close();
 		}
+	}
 
-		private void copyBody(OutputStream responseBodyOutputStream) throws IOException {
-			BufferedInputStream inputStream = new BufferedInputStream(response.getBodyInputStream());
-			try {
-				int length = 0;
-				while (length >= 0) {
-					length = inputStream.read(buffer);
-					responseBodyOutputStream.write(buffer, 0, length);
-				}
-				responseBodyOutputStream.close();
-			} finally {
-				inputStream.close();
+	private void copyBody(OutputStream responseBodyOutputStream) throws IOException {
+		BufferedInputStream inputStream = new BufferedInputStream(response.getBodyInputStream());
+		try {
+			int length = 0;
+			while (length >= 0) {
+				length = inputStream.read(buffer);
+				responseBodyOutputStream.write(buffer, 0, length);
 			}
+			responseBodyOutputStream.close();
+		} finally {
+			inputStream.close();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "response = " + response;
 	}
 }

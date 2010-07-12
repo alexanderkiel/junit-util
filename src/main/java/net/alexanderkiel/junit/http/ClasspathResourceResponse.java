@@ -26,8 +26,8 @@ import java.net.URL;
  */
 public class ClasspathResourceResponse extends BaseResponse {
 
-	private final URL classpathResponse;
 	private final String contentType;
+	private final URL classpathResponse;
 
 	public ClasspathResourceResponse(int statusCode, String contentType, URL classpathResponse) {
 		super(statusCode);
@@ -37,6 +37,10 @@ public class ClasspathResourceResponse extends BaseResponse {
 
 	public String getContentType() {
 		return contentType;
+	}
+
+	public boolean hasBody() {
+		return true;
 	}
 
 	public long getBodyLength() {

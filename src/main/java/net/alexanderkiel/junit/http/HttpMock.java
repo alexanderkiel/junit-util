@@ -16,6 +16,8 @@
 
 package net.alexanderkiel.junit.http;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 /**
@@ -24,41 +26,34 @@ import java.io.IOException;
  */
 public class HttpMock {
 
-	private static final HttpMockCore HTTP_MOCK_CORE = createCore();
-
-	private static HttpMockCore createCore() {
-		try {
-			return new HttpMockCoreFactory("localhost", 8181).create();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+	private static HttpMockCore httpMockCore;
 
 	public enum Method {
-		GET, PUT, POST, DELETE, OPTIONS
+		HEAD, GET, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, PATCH
 	}
 
 	private HttpMock() {
 	}
 
-	public static void start() {
-		HTTP_MOCK_CORE.init();
-		HTTP_MOCK_CORE.setCommonHeader("Access-Control-Allow-Origin", "*");
-		HTTP_MOCK_CORE.setCommonHeader("Access-Control-Allow-Methods", "GET, HEAD, PUT, DELETE, POST, OPTIONS");
-		HTTP_MOCK_CORE.setCommonHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Charset");
-		HTTP_MOCK_CORE.setCommonHeader("Access-Control-Max-Age", "1728000");
-		HTTP_MOCK_CORE.start("");
+	public static void start(int port, @NotNull String contextPath) throws IOException {
+		httpMockCore = new HttpMockCoreFactory("localhost", port, contextPath).create();
+		httpMockCore.init();
+		httpMockCore.setCommonHeader("Access-Control-Allow-Origin", "*");
+		httpMockCore.setCommonHeader("Access-Control-Allow-Methods", "GET, HEAD, PUT, DELETE, POST, OPTIONS");
+		httpMockCore.setCommonHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Charset");
+		httpMockCore.setCommonHeader("Access-Control-Max-Age", "1728000");
+		httpMockCore.start();
 	}
 
 	public static void stop() {
-		HTTP_MOCK_CORE.stop();
+		httpMockCore.stop();
 	}
 
 	public static OngoingMocking given(Method method, String path) {
-		return HTTP_MOCK_CORE.given(method, path);
+		return httpMockCore.given(method, path);
 	}
 
 	public static OngoingMocking given(Method method, String path, String payload) {
-		return HTTP_MOCK_CORE.given(method, path, payload);
+		return httpMockCore.given(method, path, payload);
 	}
 }

@@ -29,15 +29,17 @@ class HttpMockCoreFactory {
 
 	private final String hostname;
 	private final int port;
+	private final String contextPath;
 
-	HttpMockCoreFactory(String hostname, int port) {
+	HttpMockCoreFactory(String hostname, int port, String contextPath) {
 		this.hostname = hostname;
 		this.port = port;
+		this.contextPath = contextPath;
 	}
 
 	HttpMockCore create() throws IOException {
 		HttpServer httpServer = HttpServer.create(new InetSocketAddress(hostname, port), 0);
-		return new HttpMockCore(httpServer);
+		return new HttpMockCore(httpServer, contextPath);
 	}
 
 	@Override

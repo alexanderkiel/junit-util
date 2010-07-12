@@ -16,42 +16,47 @@
 
 package net.alexanderkiel.junit.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import com.sun.net.httpserver.HttpExchange;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Alexander Kiel
  * @version $Id$
  */
-public class StringResponse extends BaseResponse {
+@RunWith(MockitoJUnitRunner.class)
+public class CatchAllHandlerTest {
 
-	private final String contentType;
-	private final String body;
+	private CatchAllHandler handler;
 
-	public StringResponse(int statusCode, String contentType, String body) {
-		super(statusCode);
-		this.contentType = contentType;
-		this.body = body;
+	@Mock
+	private HttpExchange httpExchange;
+
+	@Before
+	public void setUp() throws Exception {
+		handler = new CatchAllHandler();
 	}
 
-	public String getContentType() {
-		return contentType;
+	@Test
+	public void testHandleGetRequest() throws Exception {
+		given(httpExchange.getRequestMethod()).willReturn("GET");
+
+		handler.handle(httpExchange);
+
+		verify(httpExchange).sendResponseHeaders(404, -1);
+		verify(httpExchange).close();
 	}
 
-	public boolean hasBody() {
-		return true;
-	}
+	@Test
+	public void testHandlePostRequest() throws Exception {
+		given(httpExchange.getRequestMethod()).willReturn("POST");
 
-	public long getBodyLength() {
-		return body.length();
-	}
-
-	public InputStream getBodyInputStream() {
-		return new ByteArrayInputStream(body.getBytes(UTF_8));
-	}
-
-	@Override
-	public String toString() {
-		return "StringResponse[" + super.toString() + ", contentType = '" + contentType + "', body = '" + body + "']";
+		handler.handle(httpExchange);
 	}
 }

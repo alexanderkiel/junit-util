@@ -17,7 +17,6 @@
 package net.alexanderkiel.junit.http;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -25,10 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
 
-import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -40,51 +36,44 @@ class WritableOngoingMocking extends BaseOngoingMocking {
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
 	private final String payload;
+	private final char[] charBuffer;
 
-	WritableOngoingMocking(@NotNull HttpServer httpServer, @NotNull Map<String, List<String>> commonHeaders,
-	                       @NotNull HttpMock.Method method, @NotNull String path, @NotNull String payload) {
-		super(path, commonHeaders, method, httpServer);
+	WritableOngoingMocking(@NotNull String payload) {
 		this.payload = payload;
+		charBuffer = new char[BUFFER_SIZE];
 	}
 
-	public void willRespond(@NotNull Response response) {
-		httpServer.createContext(path, new MyHttpHandler(response));
+	public void handle(HttpExchange httpExchange) throws IOException {
+		verifyPayload(httpExchange);
+		setResponseHeaders(httpExchange.getResponseHeaders());
+		sendResponseHeaders(httpExchange);
+		sendResponseBody(httpExchange.getResponseBody());
+		httpExchange.close();
 	}
 
-	private class MyHttpHandler extends BaseHttpHandler {
+	private void verifyPayload(HttpExchange httpExchange) throws IOException {
+		String message = String.format("request %s payload", httpExchange.getRequestURI());
+		String body = readBody(httpExchange.getRequestBody());
+		assertEquals(message, payload, body);
+	}
 
-		private final char[] charBuffer;
-
-		private MyHttpHandler(@NotNull Response response) {
-			super(response);
-			charBuffer = new char[BUFFER_SIZE];
+	private String readBody(InputStream requestBodyInputStream) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(requestBodyInputStream, UTF_8));
+		try {
+			StringBuilder buffer = new StringBuilder();
+			int length = 0;
+			do {
+				buffer.append(charBuffer, 0, length);
+				length = reader.read(charBuffer);
+			} while (length >= 0);
+			return buffer.toString();
+		} finally {
+			reader.close();
 		}
+	}
 
-		@Override
-		void handleRequest(HttpExchange httpExchange) throws IOException {
-			verifyPayload(httpExchange.getRequestBody());
-			setResponseHeaders(httpExchange.getResponseHeaders());
-			sendResponseHeaders(httpExchange);
-			sendResponseBody(httpExchange.getResponseBody());
-		}
-
-		private void verifyPayload(InputStream requestBodyInputStream) throws IOException {
-			assertEquals(format("request %s payload", path), payload, readBody(requestBodyInputStream));
-		}
-
-		private String readBody(InputStream requestBodyInputStream) throws IOException {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(requestBodyInputStream, UTF_8));
-			try {
-				StringBuilder sb = new StringBuilder();
-				int length = 0;
-				while (length >= 0) {
-					length = reader.read(charBuffer);
-					sb.append(charBuffer, 0, length);
-				}
-				return sb.toString();
-			} finally {
-				reader.close();
-			}
-		}
+	@Override
+	public String toString() {
+		return "WritableOngoingMocking[" + super.toString() + ", payload = '" + payload + "']";
 	}
 }
