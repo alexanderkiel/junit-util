@@ -25,6 +25,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
@@ -34,225 +35,248 @@ import static org.mockito.Mockito.verify;
  * @author Alexander Kiel
  */
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings({"ErrorNotRethrown"})
 public class AppExecutorImplTest {
 
-    private AppExecutorImpl appExecutor;
+	private AppExecutorImpl appExecutor;
 
-    @Mock
-    private Runtime runtime;
+	@Mock
+	private Runtime runtime;
 
-    @Mock
-    private Process process;
+	@Mock
+	private Process process;
 
-    @Before
-    public void setUp() throws Exception {
-        appExecutor = new AppExecutorImpl(runtime);
-    }
+	@Before
+	public void setUp() throws Exception {
+		appExecutor = new AppExecutorImpl(runtime);
+	}
 
-    @Test(expected = IllegalStateException.class)
-    public void testExecuteAppWithoutSpecifyingACommand() throws Exception {
-        appExecutor.executeApp();
-    }
+	@Test(expected = IllegalStateException.class)
+	public void testExecuteAppWithoutSpecifyingACommand() throws Exception {
+		appExecutor.executeApp();
+	}
 
-    @Test
-    public void testExecuteApp() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("normal output"));
-        given(process.getErrorStream()).willReturn(getInputStream("error"));
-        given(process.waitFor()).willReturn(0);
+	@Test
+	public void testExecuteApp() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("normal output"));
+		given(process.getErrorStream()).willReturn(getInputStream("error"));
+		given(process.waitFor()).willReturn(0);
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-        appExecutor.assertLineOfOutput("normal output");
-        appExecutor.assertLineOfError("error");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertNormalExit();
-    }
+		appExecutor.assertLineOfOutput("normal output");
+		appExecutor.assertLineOfError("error");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-    @Test
-    public void testExecuteAppWithOneArgument() throws Exception {
-        given(runtime.exec(new String[]{"foo", "bar"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("normal output"));
-        given(process.getErrorStream()).willReturn(getInputStream("error"));
-        given(process.waitFor()).willReturn(0);
+	@Test
+	public void testExecuteAppWithOneArgument() throws Exception {
+		given(runtime.exec(new String[]{"foo", "bar"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("normal output"));
+		given(process.getErrorStream()).willReturn(getInputStream("error"));
+		given(process.waitFor()).willReturn(0);
 
-        appExecutor.setCommand("foo");
-        appExecutor.addArg("bar");
-        appExecutor.executeApp();
+		appExecutor.setCommand("foo");
+		appExecutor.addArg("bar");
+		appExecutor.executeApp();
 
-        appExecutor.assertLineOfOutput("normal output");
-        appExecutor.assertLineOfError("error");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertNormalExit();
-    }
+		appExecutor.assertLineOfOutput("normal output");
+		appExecutor.assertLineOfError("error");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-    @Test
-    public void testExecuteAppWithTwoArguments() throws Exception {
-        given(runtime.exec(new String[]{"foo", "bar", "baz"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("normal output"));
-        given(process.getErrorStream()).willReturn(getInputStream("error"));
-        given(process.waitFor()).willReturn(0);
+	@Test
+	public void testExecuteAppWithTwoArguments() throws Exception {
+		given(runtime.exec(new String[]{"foo", "bar", "baz"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("normal output"));
+		given(process.getErrorStream()).willReturn(getInputStream("error"));
+		given(process.waitFor()).willReturn(0);
 
-        appExecutor.setCommand("foo");
-        appExecutor.addArg("bar");
-        appExecutor.addArg("baz");
-        appExecutor.executeApp();
+		appExecutor.setCommand("foo");
+		appExecutor.addArg("bar");
+		appExecutor.addArg("baz");
+		appExecutor.executeApp();
 
-        appExecutor.assertLineOfOutput("normal output");
-        appExecutor.assertLineOfError("error");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertNormalExit();
-    }
+		appExecutor.assertLineOfOutput("normal output");
+		appExecutor.assertLineOfError("error");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-    @Test
-    public void testExecuteAppWithTwoArgumentsUsingTheArgsMethod() throws Exception {
-        given(runtime.exec(new String[]{"foo", "bar", "baz"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("normal output"));
-        given(process.getErrorStream()).willReturn(getInputStream("error"));
-        given(process.waitFor()).willReturn(0);
+	@Test
+	public void testExecuteAppWithTwoArgumentsUsingTheArgsMethod() throws Exception {
+		given(runtime.exec(new String[]{"foo", "bar", "baz"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("normal output"));
+		given(process.getErrorStream()).willReturn(getInputStream("error"));
+		given(process.waitFor()).willReturn(0);
 
-        appExecutor.setCommand("foo");
-        appExecutor.addArgs("bar", "baz");
-        appExecutor.executeApp();
+		appExecutor.setCommand("foo");
+		appExecutor.addArgs("bar", "baz");
+		appExecutor.executeApp();
 
-        appExecutor.assertLineOfOutput("normal output");
-        appExecutor.assertLineOfError("error");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertNormalExit();
-    }
+		appExecutor.assertLineOfOutput("normal output");
+		appExecutor.assertLineOfError("error");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-    @Test
-    public void testExecuteAppWithTwoLinesOfOutput() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("first line\nsecond line"));
-        given(process.getErrorStream()).willReturn(getInputStream(""));
-        given(process.waitFor()).willReturn(0);
+	@Test
+	public void testExecuteAppWithTwoLinesOfOutput() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("first line\nsecond line"));
+		given(process.getErrorStream()).willReturn(getInputStream(""));
+		given(process.waitFor()).willReturn(0);
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-        appExecutor.assertLineOfOutput("first line");
-        appExecutor.assertLineOfOutput("second line");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertNormalExit();
-    }
+		appExecutor.assertLineOfOutput("first line");
+		appExecutor.assertLineOfOutput("second line");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-    @Test
-    public void testExecuteAppWithMoreOutputAsExpected() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("first line\nsecond line"));
-        given(process.getErrorStream()).willReturn(getInputStream(""));
-        given(process.waitFor()).willReturn(0);
+	@Test
+	public void testExecuteAppWithMoreOutputAsExpected() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("first line\nsecond line"));
+		given(process.getErrorStream()).willReturn(getInputStream(""));
+		given(process.waitFor()).willReturn(0);
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-        try {
-            appExecutor.assertNoMoreOutput();
-            fail();
-        } catch (AssertionError e) {
-            assertTrue(e.getMessage().contains("no more output on STDOUT"));
-            assertTrue(e.getMessage().contains("first line"));
-            assertTrue(e.getMessage().contains("second line"));
-        }
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertNormalExit();
-    }
+		try {
+			appExecutor.assertNoMoreOutput();
+			fail("expected AssertionError");
+		} catch (AssertionError e) {
+			assertTrue(e.getMessage().contains("no more output on STDOUT"));
+			assertTrue(e.getMessage().contains("first line"));
+			assertTrue(e.getMessage().contains("second line"));
+		}
 
-    @Test
-    public void testExecuteAppWithErrorStatusCode() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream(""));
-        given(process.getErrorStream()).willReturn(getInputStream("error"));
-        given(process.waitFor()).willReturn(1);
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+	@Test
+	public void testExecuteAppWithLessOutputAsExpected() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream(""));
+		given(process.getErrorStream()).willReturn(getInputStream(""));
+		given(process.waitFor()).willReturn(0);
 
-        appExecutor.assertLineOfError("error");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertExit(1);
-    }
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-    @Test
-    public void testDestroy() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream(""));
-        given(process.getErrorStream()).willReturn(getInputStream(""));
+		try {
+			appExecutor.assertLineOfOutput("first line");
+			fail("expected AssertionError");
+		} catch (AssertionError e) {
+			assertEquals("error message", "output on STDOUT exists", e.getMessage());
+		}
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-        appExecutor.destroy();
-        verify(process).destroy();
-    }
+	@Test
+	public void testExecuteAppWithErrorStatusCode() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream(""));
+		given(process.getErrorStream()).willReturn(getInputStream("error"));
+		given(process.waitFor()).willReturn(1);
 
-    @Test
-    public void testLineOfOutputMatches() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("aaa"));
-        given(process.getErrorStream()).willReturn(getInputStream(""));
-        given(process.waitFor()).willReturn(0);
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.assertLineOfError("error");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertExit(1);
+	}
 
-        appExecutor.assertLineOfOutputMatches("a{3}");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertNormalExit();
-    }
+	@Test
+	public void testDestroy() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream(""));
+		given(process.getErrorStream()).willReturn(getInputStream(""));
 
-    @Test(expected = AssertionError.class)
-    public void testLineOfOutputMatchesNot() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream("aaaa"));
-        given(process.getErrorStream()).willReturn(getInputStream(""));
-        given(process.waitFor()).willReturn(0);
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.destroy();
+		verify(process).destroy();
+	}
 
-        appExecutor.assertLineOfOutputMatches("a{3}");
-    }
+	@Test
+	public void testLineOfOutputMatches() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("aaa"));
+		given(process.getErrorStream()).willReturn(getInputStream(""));
+		given(process.waitFor()).willReturn(0);
 
-    @Test
-    public void testLineOfErrorMatches() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream(""));
-        given(process.getErrorStream()).willReturn(getInputStream("aaa"));
-        given(process.waitFor()).willReturn(1);
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.assertLineOfOutputMatches("a{3}");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertNormalExit();
+	}
 
-        appExecutor.assertLineOfErrorMatches("a{3}");
-        appExecutor.assertNoMoreOutput();
-        appExecutor.assertNoMoreErrors();
-        appExecutor.assertExit(1);
-    }
+	@Test(expected = AssertionError.class)
+	public void testLineOfOutputMatchesNot() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream("aaaa"));
+		given(process.getErrorStream()).willReturn(getInputStream(""));
+		given(process.waitFor()).willReturn(0);
 
-    @Test(expected = AssertionError.class)
-    public void testLineOfErrorMatchesNot() throws Exception {
-        given(runtime.exec(new String[]{"foo"})).willReturn(process);
-        given(process.getInputStream()).willReturn(getInputStream(""));
-        given(process.getErrorStream()).willReturn(getInputStream("aaaa"));
-        given(process.waitFor()).willReturn(1);
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
 
-        appExecutor.setCommand("foo");
-        appExecutor.executeApp();
+		appExecutor.assertLineOfOutputMatches("a{3}");
+	}
 
-        appExecutor.assertLineOfErrorMatches("a{3}");
-    }
+	@Test
+	public void testLineOfErrorMatches() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream(""));
+		given(process.getErrorStream()).willReturn(getInputStream("aaa"));
+		given(process.waitFor()).willReturn(1);
 
-    private InputStream getInputStream(String text) {
-        return new ByteArrayInputStream(text.getBytes());
-    }
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
+
+		appExecutor.assertLineOfErrorMatches("a{3}");
+		appExecutor.assertNoMoreOutput();
+		appExecutor.assertNoMoreErrors();
+		appExecutor.assertExit(1);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void testLineOfErrorMatchesNot() throws Exception {
+		given(runtime.exec(new String[]{"foo"})).willReturn(process);
+		given(process.getInputStream()).willReturn(getInputStream(""));
+		given(process.getErrorStream()).willReturn(getInputStream("aaaa"));
+		given(process.waitFor()).willReturn(1);
+
+		appExecutor.setCommand("foo");
+		appExecutor.executeApp();
+
+		appExecutor.assertLineOfErrorMatches("a{3}");
+	}
+
+	private InputStream getInputStream(String text) {
+		return new ByteArrayInputStream(text.getBytes());
+	}
 }
