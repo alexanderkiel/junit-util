@@ -75,7 +75,7 @@ public class Assert {
 		assertTrue("hash code of unequal objects is not equal", foo2.hashCode() != bar.hashCode());
 	}
 
-	private static void assertExceptionMessageEquals(String expectedMessage, Throwable throwable) {
+	public static void assertExceptionMessageEquals(String expectedMessage, Throwable throwable) {
 		assertEquals("exception message", expectedMessage, throwable.getMessage());
 	}
 }
