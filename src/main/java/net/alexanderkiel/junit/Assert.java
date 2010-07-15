@@ -16,6 +16,7 @@
 
 package net.alexanderkiel.junit;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -72,5 +73,9 @@ public class Assert {
 
 		assertTrue("hash code of equal objects is equal too", foo1.hashCode() == foo2.hashCode());
 		assertTrue("hash code of unequal objects is not equal", foo2.hashCode() != bar.hashCode());
+	}
+
+	private static void assertExceptionMessageEquals(String expectedMessage, Throwable throwable) {
+		assertEquals("exception message", expectedMessage, throwable.getMessage());
 	}
 }
