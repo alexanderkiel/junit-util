@@ -56,4 +56,8 @@ public class HttpMock {
 	public static OngoingMocking given(Method method, String path, String payload) {
 		return httpMockCore.given(method, path, payload);
 	}
+
+	public static void verify() {
+		httpMockCore.verify();
+	}
 }

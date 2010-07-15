@@ -33,6 +33,9 @@ class ReadonlyOngoingMocking extends BaseOngoingMocking {
 		httpExchange.close();
 	}
 
+	public void verify() {
+	}
+
 	@Override
 	public String toString() {
 		return "ReadonlyOngoingMocking[" + super.toString() + "]";

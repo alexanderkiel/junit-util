@@ -40,8 +40,9 @@ abstract class BaseOngoingMocking implements OngoingMocking, HttpHandler {
 		buffer = new byte[BUFFER_SIZE];
 	}
 
-	public void willRespond(@NotNull Response response) {
+	public OngoingMocking willRespond(@NotNull Response response) {
 		this.response = response;
+		return this;
 	}
 
 	void setResponseHeaders(Headers headers) {

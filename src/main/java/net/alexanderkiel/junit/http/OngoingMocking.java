@@ -22,5 +22,7 @@ package net.alexanderkiel.junit.http;
  */
 public interface OngoingMocking {
 
-	void willRespond(Response response);
+	OngoingMocking willRespond(Response response);
+
+	void verify();
 }

@@ -37,6 +37,8 @@ class WritableOngoingMocking extends BaseOngoingMocking {
 
 	private final String payload;
 	private final char[] charBuffer;
+	private String message;
+	private String body;
 
 	WritableOngoingMocking(@NotNull String payload) {
 		this.payload = payload;
@@ -51,10 +53,13 @@ class WritableOngoingMocking extends BaseOngoingMocking {
 		httpExchange.close();
 	}
 
-	private void verifyPayload(HttpExchange httpExchange) throws IOException {
-		String message = String.format("request %s payload", httpExchange.getRequestURI());
-		String body = readBody(httpExchange.getRequestBody());
+	public void verify() {
 		assertEquals(message, payload, body);
+	}
+
+	private void verifyPayload(HttpExchange httpExchange) throws IOException {
+		message = String.format("request %s payload", httpExchange.getRequestURI());
+		body = readBody(httpExchange.getRequestBody());
 	}
 
 	private String readBody(InputStream requestBodyInputStream) throws IOException {
