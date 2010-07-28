@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -37,98 +37,98 @@ import static java.util.Collections.singletonList;
  */
 class HttpMockCore {
 
-	private static final int THREAD_POOL_SIZE = 10;
+    private static final int THREAD_POOL_SIZE = 10;
 
-	private final HttpServer httpServer;
-	private final String contextPath;
+    private final HttpServer httpServer;
+    private final String contextPath;
 
-	private DefaultHandler defaultHandler;
-	private CommonHeaderFilter commonHeaderFilter;
-	private List<OngoingMocking> mockings;
+    private DefaultHandler defaultHandler;
+    private CommonHeaderFilter commonHeaderFilter;
+    private final Map<Key, OngoingMocking> mockings;
 
-	HttpMockCore(@NotNull HttpServer httpServer, @NotNull String contextPath) {
-		this.httpServer = httpServer;
-		this.contextPath = contextPath;
-		mockings = new ArrayList<OngoingMocking>();
-	}
+    HttpMockCore(@NotNull HttpServer httpServer, @NotNull String contextPath) {
+        this.httpServer = httpServer;
+        this.contextPath = contextPath;
+        mockings = new HashMap<Key, OngoingMocking>();
+    }
 
-	void init() {
-		httpServer.setExecutor(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
+    void init() {
+        httpServer.setExecutor(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
 
-		defaultHandler = new DefaultHandler(URI.create(contextPath));
-		commonHeaderFilter = new CommonHeaderFilter();
-		httpServer.createContext(contextPath, defaultHandler).getFilters().add(commonHeaderFilter);
-		httpServer.createContext("/", new CatchAllHandler()).getFilters().add(commonHeaderFilter);
-	}
+        defaultHandler = new DefaultHandler(URI.create(contextPath));
+        commonHeaderFilter = new CommonHeaderFilter();
+        httpServer.createContext(contextPath, defaultHandler).getFilters().add(commonHeaderFilter);
+        httpServer.createContext("/", new CatchAllHandler()).getFilters().add(commonHeaderFilter);
+    }
 
-	void start() {
-		httpServer.start();
-	}
+    void start() {
+        httpServer.start();
+    }
 
-	void stop() {
-		httpServer.stop(0);
-	}
+    void stop() {
+        httpServer.stop(0);
+    }
 
-	void setCommonHeader(@NotNull String name, @NotNull String value) {
-		commonHeaderFilter.setHeader(name, value);
-	}
+    void setCommonHeader(@NotNull String name, @NotNull String value) {
+        commonHeaderFilter.setHeader(name, value);
+    }
 
-	OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path) {
-		ReadonlyOngoingMocking mocking = new ReadonlyOngoingMocking();
-		defaultHandler.registerSubHandler(method, path, mocking);
-		mockings.add(mocking);
-		return mocking;
-	}
+    OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path) {
+        ReadonlyOngoingMocking mocking = new ReadonlyOngoingMocking(method, path);
+        defaultHandler.registerSubHandler(method, path, mocking);
+        mockings.put(new Key(method, path), mocking);
+        return mocking;
+    }
 
-	OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path, @NotNull String payload) {
-		WritableOngoingMocking mocking = new WritableOngoingMocking(payload);
-		defaultHandler.registerSubHandler(method, path, mocking);
-		mockings.add(mocking);
-		return mocking;
-	}
+    OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path, @NotNull String payload) {
+        WritableOngoingMocking mocking = new WritableOngoingMocking(payload);
+        defaultHandler.registerSubHandler(method, path, mocking);
+        mockings.put(new Key(method, path), mocking);
+        return mocking;
+    }
 
-	/**
-	 * Verifies all requests.
-	 *
-	 * @throws AssertionError if one of the request were invalid.
-	 */
-	void verify() {
-		for (OngoingMocking mocking : mockings) {
-			mocking.verify();
-		}
-	}
+    /**
+     * Verifies all requests.
+     *
+     * @throws AssertionError if one of the request were invalid.
+     */
+    void verify() {
+        for (OngoingMocking mocking : mockings.values()) {
+            mocking.verify();
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "HttpMockCore[httpServer.address = " + httpServer.getAddress() + ", contextPath = '" + contextPath + "']";
-	}
+    @Override
+    public String toString() {
+        return "HttpMockCore[httpServer.address = " + httpServer.getAddress() + ", contextPath = '" + contextPath + "']";
+    }
 
-	private static class CommonHeaderFilter extends Filter {
+    private static class CommonHeaderFilter extends Filter {
 
-		private final Map<String, List<String>> commonHeaders;
+        private final Map<String, List<String>> commonHeaders;
 
-		private CommonHeaderFilter() {
-			commonHeaders = new Headers();
-		}
+        private CommonHeaderFilter() {
+            commonHeaders = new Headers();
+        }
 
-		void setHeader(String name, String value) {
-			commonHeaders.put(name, singletonList(value));
-		}
+        void setHeader(String name, String value) {
+            commonHeaders.put(name, singletonList(value));
+        }
 
-		@Override
-		public void doFilter(HttpExchange httpExchange, Chain chain) throws IOException {
-			httpExchange.getResponseHeaders().putAll(commonHeaders);
-			chain.doFilter(httpExchange);
-		}
+        @Override
+        public void doFilter(HttpExchange httpExchange, Chain chain) throws IOException {
+            httpExchange.getResponseHeaders().putAll(commonHeaders);
+            chain.doFilter(httpExchange);
+        }
 
-		@Override
-		public String description() {
-			return "Sets common response headers.";
-		}
+        @Override
+        public String description() {
+            return "Sets common response headers.";
+        }
 
-		@Override
-		public String toString() {
-			return "CommonHeaderFilter[commonHeaders = " + commonHeaders + "]";
-		}
-	}
+        @Override
+        public String toString() {
+            return "CommonHeaderFilter[commonHeaders = " + commonHeaders + "]";
+        }
+    }
 }

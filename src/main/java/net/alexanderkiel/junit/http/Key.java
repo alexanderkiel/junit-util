@@ -16,46 +16,39 @@
 
 package net.alexanderkiel.junit.http;
 
-import com.sun.net.httpserver.HttpExchange;
-
-import java.io.IOException;
-
-import static java.lang.String.format;
-import static org.junit.Assert.assertTrue;
-
 /**
- * @author Alexander Kiel
+ * @author <a href="mailto:alexander.kiel@life.uni-leipzig.de">Alexander Kiel</a>
  * @version $Id$
  */
-class ReadonlyOngoingMocking extends BaseOngoingMocking {
+class Key {
 
     private final HttpMock.Method method;
     private final String path;
-    private boolean called;
 
-    ReadonlyOngoingMocking(HttpMock.Method method, String path) {
+    Key(HttpMock.Method method, String path) {
         this.method = method;
         this.path = path;
     }
 
-    public void handle(HttpExchange httpExchange) throws IOException {
-        verifyCalled();
-        setResponseHeaders(httpExchange.getResponseHeaders());
-        sendResponseHeaders(httpExchange);
-        sendResponseBody(httpExchange.getResponseBody());
-        httpExchange.close();
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Key)) return false;
+
+        Key key = (Key) obj;
+
+        return method == key.method && path.equals(key.path);
     }
 
-    private void verifyCalled() {
-        called = true;
-    }
-
-    public void verify() {
-        assertTrue(format("request %s %s called", method, path), called);
+    @Override
+    public int hashCode() {
+        int result = method.hashCode();
+        result = 31 * result + path.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return "ReadonlyOngoingMocking[method = " + method + ", path = " + path + ", " + super.toString() + "]";
+        return "Key[method = " + method + ", path = '" + path + "']";
     }
 }

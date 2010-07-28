@@ -33,52 +33,52 @@ import static org.junit.Assert.assertEquals;
  */
 class WritableOngoingMocking extends BaseOngoingMocking {
 
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-	private final String payload;
-	private final char[] charBuffer;
-	private String message;
-	private String body;
+    private final String payload;
+    private final char[] charBuffer;
+    private String message;
+    private String body;
 
-	WritableOngoingMocking(@NotNull String payload) {
-		this.payload = payload;
-		charBuffer = new char[BUFFER_SIZE];
-	}
+    WritableOngoingMocking(@NotNull String payload) {
+        this.payload = payload;
+        charBuffer = new char[BUFFER_SIZE];
+    }
 
-	public void handle(HttpExchange httpExchange) throws IOException {
-		verifyPayload(httpExchange);
-		setResponseHeaders(httpExchange.getResponseHeaders());
-		sendResponseHeaders(httpExchange);
-		sendResponseBody(httpExchange.getResponseBody());
-		httpExchange.close();
-	}
+    public void handle(HttpExchange httpExchange) throws IOException {
+        verifyPayload(httpExchange);
+        setResponseHeaders(httpExchange.getResponseHeaders());
+        sendResponseHeaders(httpExchange);
+        sendResponseBody(httpExchange.getResponseBody());
+        httpExchange.close();
+    }
 
-	public void verify() {
-		assertEquals(message, payload, body);
-	}
+    private void verifyPayload(HttpExchange httpExchange) throws IOException {
+        message = String.format("request %s payload", httpExchange.getRequestURI());
+        body = readBody(httpExchange.getRequestBody());
+    }
 
-	private void verifyPayload(HttpExchange httpExchange) throws IOException {
-		message = String.format("request %s payload", httpExchange.getRequestURI());
-		body = readBody(httpExchange.getRequestBody());
-	}
+    private String readBody(InputStream requestBodyInputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(requestBodyInputStream, UTF_8));
+        try {
+            StringBuilder buffer = new StringBuilder();
+            int length = 0;
+            do {
+                buffer.append(charBuffer, 0, length);
+                length = reader.read(charBuffer);
+            } while (length >= 0);
+            return buffer.toString();
+        } finally {
+            reader.close();
+        }
+    }
 
-	private String readBody(InputStream requestBodyInputStream) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(requestBodyInputStream, UTF_8));
-		try {
-			StringBuilder buffer = new StringBuilder();
-			int length = 0;
-			do {
-				buffer.append(charBuffer, 0, length);
-				length = reader.read(charBuffer);
-			} while (length >= 0);
-			return buffer.toString();
-		} finally {
-			reader.close();
-		}
-	}
+    public void verify() {
+        assertEquals(message, payload, body);
+    }
 
-	@Override
-	public String toString() {
-		return "WritableOngoingMocking[" + super.toString() + ", payload = '" + payload + "']";
-	}
+    @Override
+    public String toString() {
+        return "WritableOngoingMocking[" + super.toString() + ", payload = '" + payload + "']";
+    }
 }
