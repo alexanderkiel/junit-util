@@ -26,38 +26,39 @@ import java.io.IOException;
  */
 public class HttpMock {
 
-	private static HttpMockCore httpMockCore;
+    private static HttpMockCore httpMockCore;
 
-	public enum Method {
-		HEAD, GET, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, PATCH
-	}
+    public enum Method {
+        HEAD, GET, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, PATCH
+    }
 
-	private HttpMock() {
-	}
+    private HttpMock() {
+    }
 
-	public static void start(int port, @NotNull String contextPath) throws IOException {
-		httpMockCore = new HttpMockCoreFactory("localhost", port, contextPath).create();
-		httpMockCore.init();
-		httpMockCore.setCommonHeader("Access-Control-Allow-Origin", "*");
-		httpMockCore.setCommonHeader("Access-Control-Allow-Methods", "GET, HEAD, PUT, DELETE, POST, OPTIONS");
-		httpMockCore.setCommonHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Charset");
-		httpMockCore.setCommonHeader("Access-Control-Max-Age", "1728000");
-		httpMockCore.start();
-	}
+    public static void start(int port, @NotNull String contextPath) throws IOException {
+        httpMockCore = new HttpMockCoreFactory("localhost", port, contextPath).create();
+        httpMockCore.init();
+        httpMockCore.setCommonHeader("Access-Control-Allow-Origin", "*");
+        httpMockCore.setCommonHeader("Access-Control-Allow-Methods", "GET, HEAD, PUT, DELETE, POST, OPTIONS");
+        httpMockCore.setCommonHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Charset, " +
+                "Authorization");
+        httpMockCore.setCommonHeader("Access-Control-Max-Age", "1728000");
+        httpMockCore.start();
+    }
 
-	public static void stop() {
-		httpMockCore.stop();
-	}
+    public static void stop() {
+        httpMockCore.stop();
+    }
 
-	public static OngoingMocking given(Method method, String path) {
-		return httpMockCore.given(method, path);
-	}
+    public static OngoingMocking given(Method method, String path) {
+        return httpMockCore.given(method, path);
+    }
 
-	public static OngoingMocking given(Method method, String path, String payload) {
-		return httpMockCore.given(method, path, payload);
-	}
+    public static OngoingMocking given(Method method, String path, String payload) {
+        return httpMockCore.given(method, path, payload);
+    }
 
-	public static void verify() {
-		httpMockCore.verify();
-	}
+    public static void verify() {
+        httpMockCore.verify();
+    }
 }
