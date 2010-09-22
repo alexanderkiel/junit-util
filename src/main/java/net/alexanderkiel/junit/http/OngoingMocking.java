@@ -22,7 +22,9 @@ package net.alexanderkiel.junit.http;
  */
 public interface OngoingMocking {
 
-	OngoingMocking willRespond(Response response);
+    OngoingMocking willRespond(Response response);
 
-	void verify();
+    OngoingMocking withBasicAuth(String username, String password);
+
+    void verify();
 }

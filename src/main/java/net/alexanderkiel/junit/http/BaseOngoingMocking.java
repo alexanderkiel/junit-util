@@ -24,6 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Logger;
+
+import static java.lang.String.format;
+import static java.util.logging.Level.FINER;
 
 /**
  * @author Alexander Kiel
@@ -31,58 +35,88 @@ import java.io.OutputStream;
  */
 abstract class BaseOngoingMocking implements OngoingMocking, HttpHandler {
 
-	static final int BUFFER_SIZE = 1024;
+    static final int BUFFER_SIZE = 1024;
 
-	private final byte[] buffer;
-	private Response response;
+    private static final Logger LOGGER = Logger.getLogger(BaseOngoingMocking.class.getName());
+    private static final String AUTHORIZATION_HEADER = "Authorization";
 
-	BaseOngoingMocking() {
-		buffer = new byte[BUFFER_SIZE];
-	}
+    private final byte[] buffer;
+    private Response response;
+    private BasicAuthToken basicAuthToken;
 
-	public OngoingMocking willRespond(@NotNull Response response) {
-		this.response = response;
-		return this;
-	}
+    BaseOngoingMocking() {
+        buffer = new byte[BUFFER_SIZE];
+    }
 
-	void setResponseHeaders(Headers headers) {
-		if (response.hasBody()) {
-			headers.set("Content-Type", response.getContentType());
-		}
-	}
+    public OngoingMocking willRespond(@NotNull Response response) {
+        this.response = response;
+        return this;
+    }
 
-	void sendResponseHeaders(HttpExchange httpExchange) throws IOException {
-		if (response.hasBody()) {
-			httpExchange.sendResponseHeaders(response.getStatusCode(), response.getBodyLength());
-		} else {
-			httpExchange.sendResponseHeaders(response.getStatusCode(), -1);
-		}
-	}
+    public OngoingMocking withBasicAuth(@NotNull String username, @NotNull String password) {
+        basicAuthToken = new BasicAuthToken(username, password);
+        return this;
+    }
 
-	void sendResponseBody(OutputStream responseBodyOutputStream) throws IOException {
-		if (response.hasBody()) {
-			copyBody(responseBodyOutputStream);
-		} else {
-			responseBodyOutputStream.close();
-		}
-	}
+    void setResponseHeaders(Headers headers) {
+        if (response.hasBody()) {
+            headers.set("Content-Type", response.getContentType());
+        }
+    }
 
-	private void copyBody(OutputStream responseBodyOutputStream) throws IOException {
-		BufferedInputStream inputStream = new BufferedInputStream(response.getBodyInputStream());
-		try {
-			int length = 0;
-			while (length >= 0) {
-				length = inputStream.read(buffer);
-				responseBodyOutputStream.write(buffer, 0, length);
-			}
-			responseBodyOutputStream.close();
-		} finally {
-			inputStream.close();
-		}
-	}
+    void sendResponseHeaders(HttpExchange httpExchange) throws IOException {
+        if (response.hasBody()) {
+            httpExchange.sendResponseHeaders(response.getStatusCode(), response.getBodyLength());
+        } else {
+            httpExchange.sendResponseHeaders(response.getStatusCode(), -1);
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "response = " + response;
-	}
+    void sendResponseBody(OutputStream responseBodyOutputStream) throws IOException {
+        if (response.hasBody()) {
+            copyBody(responseBodyOutputStream);
+        } else {
+            responseBodyOutputStream.close();
+        }
+    }
+
+    private void copyBody(OutputStream responseBodyOutputStream) throws IOException {
+        BufferedInputStream inputStream = new BufferedInputStream(response.getBodyInputStream());
+        try {
+            int length = 0;
+            while (length >= 0) {
+                length = inputStream.read(buffer);
+                responseBodyOutputStream.write(buffer, 0, length);
+            }
+            responseBodyOutputStream.close();
+        } finally {
+            inputStream.close();
+        }
+    }
+
+    protected void checkAuthorisation(HttpExchange httpExchange) {
+        if (basicAuthToken != null) {
+            Headers requestHeaders = httpExchange.getRequestHeaders();
+            if (requestHeaders.containsKey(AUTHORIZATION_HEADER)) {
+                String authHeader = requestHeaders.getFirst(AUTHORIZATION_HEADER);
+                if (!authHeader.equals(basicAuthToken.getAuthHeaderValue())) {
+                    response = new EmptyResponse(403);
+                }
+            } else {
+                response = new EmptyResponse(401);
+            }
+        }
+    }
+
+    protected void log(HttpExchange httpExchange) {
+        if (LOGGER.isLoggable(FINER)) {
+            LOGGER.finer(format("Handle request: %s %s", httpExchange.getRequestMethod(),
+                    httpExchange.getRequestURI()));
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "response = " + response;
+    }
 }

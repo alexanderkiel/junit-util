@@ -16,48 +16,55 @@
 
 package net.alexanderkiel.junit.http;
 
-import com.sun.net.httpserver.HttpExchange;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
-import static java.lang.String.format;
-import static org.junit.Assert.assertTrue;
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 /**
- * @author Alexander Kiel
+ * @author <a href="mailto:alexander.kiel@life.uni-leipzig.de">Alexander Kiel</a>
  * @version $Id$
  */
-class ReadonlyOngoingMocking extends BaseOngoingMocking {
+public final class BasicAuthToken {
 
-    private final HttpMock.Method method;
-    private final String path;
-    private boolean called;
+    private final String username;
+    private final String password;
 
-    ReadonlyOngoingMocking(HttpMock.Method method, String path) {
-        this.method = method;
-        this.path = path;
+    public BasicAuthToken(@NotNull String username, @NotNull String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public void handle(HttpExchange httpExchange) throws IOException {
-        log(httpExchange);
-        setCalled();
-        checkAuthorisation(httpExchange);
-        setResponseHeaders(httpExchange.getResponseHeaders());
-        sendResponseHeaders(httpExchange);
-        sendResponseBody(httpExchange.getResponseBody());
-        httpExchange.close();
+    public String getUsername() {
+        return username;
     }
 
-    private void setCalled() {
-        called = true;
+    public String getPassword() {
+        return password;
     }
 
-    public void verify() {
-        assertTrue(format("request %s %s called", method, path), called);
+    public String getAuthHeaderValue() {
+        return "Basic " + new String(encodeBase64((username + ":" + password).getBytes(), false));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        BasicAuthToken other = (BasicAuthToken) obj;
+
+        return username.equals(other.username) && password.equals(other.password);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = username.hashCode();
+        result = 31 * result + password.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return "ReadonlyOngoingMocking[method = " + method + ", path = '" + path + "', " + super.toString() + "]";
+        return "BasicAuthToken[username = '" + username + "', password = '" + password + "']";
     }
 }

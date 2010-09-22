@@ -28,8 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import static java.util.Collections.singletonList;
+import static java.util.logging.Level.FINE;
 
 /**
  * @author Alexander Kiel
@@ -38,6 +40,7 @@ import static java.util.Collections.singletonList;
 class HttpMockCore {
 
     private static final int THREAD_POOL_SIZE = 10;
+    private static final Logger LOGGER = Logger.getLogger(HttpMockCore.class.getName());
 
     private final HttpServer httpServer;
     private final String contextPath;
@@ -62,10 +65,16 @@ class HttpMockCore {
     }
 
     void start() {
+        if (LOGGER.isLoggable(FINE)) {
+            LOGGER.fine("Start HTTP Server on: " + httpServer.getAddress() + contextPath);
+        }
         httpServer.start();
     }
 
     void stop() {
+        if (LOGGER.isLoggable(FINE)) {
+            LOGGER.fine("Stop HTTP Server.");
+        }
         httpServer.stop(0);
     }
 
