@@ -26,24 +26,24 @@ import java.util.Map;
  */
 abstract class BaseResponse implements Response {
 
-	static final Charset UTF_8 = Charset.forName("UTF-8");
+    static final Charset UTF_8 = Charset.forName("UTF-8");
 
-	private final int statusCode;
+    private final int statusCode;
 
-	BaseResponse(int statusCode) {
-		this.statusCode = statusCode;
-	}
+    BaseResponse(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
-	public int getStatusCode() {
-		return statusCode;
-	}
+    public int getStatusCode() {
+        return statusCode;
+    }
 
-	public Map<String, String> getHeaders() {
-		return Collections.emptyMap();
-	}
+    public Map<String, String> getHeaders() {
+        return Collections.emptyMap();
+    }
 
-	@Override
-	public String toString() {
-		return "statusCode = " + statusCode;
-	}
+    @Override
+    public String toString() {
+        return "statusCode = " + statusCode;
+    }
 }
