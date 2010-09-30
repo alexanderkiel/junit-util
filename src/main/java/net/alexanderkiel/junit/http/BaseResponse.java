@@ -18,7 +18,10 @@ package net.alexanderkiel.junit.http;
 
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * @author Alexander Kiel
@@ -29,9 +32,16 @@ abstract class BaseResponse implements Response {
     static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private final int statusCode;
+    private final Map<String, String> headers;
 
     BaseResponse(int statusCode) {
         this.statusCode = statusCode;
+        headers = Collections.emptyMap();
+    }
+
+    BaseResponse(int statusCode, Map<String, String> headers) {
+        this.statusCode = statusCode;
+        this.headers = unmodifiableMap(new HashMap<String, String>(headers));
     }
 
     public int getStatusCode() {
@@ -39,7 +49,7 @@ abstract class BaseResponse implements Response {
     }
 
     public Map<String, String> getHeaders() {
-        return Collections.emptyMap();
+        return headers;
     }
 
     @Override

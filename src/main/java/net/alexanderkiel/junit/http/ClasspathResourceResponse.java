@@ -19,6 +19,7 @@ package net.alexanderkiel.junit.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * @author Alexander Kiel
@@ -31,6 +32,13 @@ public class ClasspathResourceResponse extends BaseResponse {
 
     public ClasspathResourceResponse(int statusCode, String contentType, URL classpathResponse) {
         super(statusCode);
+        this.contentType = contentType;
+        this.classpathResponse = classpathResponse;
+    }
+
+    public ClasspathResourceResponse(int statusCode, Map<String, String> headers, String contentType,
+                                     URL classpathResponse) {
+        super(statusCode, headers);
         this.contentType = contentType;
         this.classpathResponse = classpathResponse;
     }
