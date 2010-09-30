@@ -26,29 +26,29 @@ import java.util.Map;
  */
 public interface Response {
 
-	int getStatusCode();
+    int getStatusCode();
 
-	Map<String, String> getHeaders();
+    Map<String, String> getHeaders();
 
-	String getContentType();
+    String getContentType();
 
-	/**
-	 * Determines whether this response has a body of data or payload.
-	 *
-	 * @return {@code true} if this response has a body of data; {@code false} otherwise.
-	 */
-	boolean hasBody();
+    /**
+     * Determines whether this response has a body of data or payload.
+     *
+     * @return {@code true} if this response has a body of data; {@code false} otherwise.
+     */
+    boolean hasBody();
 
-	/**
-	 * Returns the length of the body of this response in bytes.
-	 * <p/>
-	 * If the length is unknown 0 have to be returned and otherwise the InputStream returned by {@link
-	 * #getBodyInputStream()} have to return the exact amount of data, which is specified by this method.
-	 *
-	 * @return the length of the body of this response in bytes.
-	 * @throws UnsupportedOperationException if this response doesn't have a body.
-	 */
-	long getBodyLength();
+    /**
+     * Returns the length of the body of this response in bytes.
+     * <p/>
+     * If the length is unknown 0 have to be returned and otherwise the InputStream returned by {@link
+     * #getBodyInputStream()} have to return the exact amount of data, which is specified by this method.
+     *
+     * @return the length of the body of this response in bytes.
+     * @throws UnsupportedOperationException if this response doesn't have a body.
+     */
+    long getBodyLength();
 
-	InputStream getBodyInputStream() throws IOException;
+    InputStream getBodyInputStream() throws IOException;
 }
