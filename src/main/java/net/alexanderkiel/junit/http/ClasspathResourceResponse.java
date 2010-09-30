@@ -26,37 +26,37 @@ import java.net.URL;
  */
 public class ClasspathResourceResponse extends BaseResponse {
 
-	private final String contentType;
-	private final URL classpathResponse;
+    private final String contentType;
+    private final URL classpathResponse;
 
-	public ClasspathResourceResponse(int statusCode, String contentType, URL classpathResponse) {
-		super(statusCode);
-		this.contentType = contentType;
-		this.classpathResponse = classpathResponse;
-	}
+    public ClasspathResourceResponse(int statusCode, String contentType, URL classpathResponse) {
+        super(statusCode);
+        this.contentType = contentType;
+        this.classpathResponse = classpathResponse;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public boolean hasBody() {
-		return true;
-	}
+    public boolean hasBody() {
+        return true;
+    }
 
-	public long getBodyLength() {
-		return 0;
-	}
+    public long getBodyLength() {
+        return 0;
+    }
 
-	public InputStream getBodyInputStream() throws IOException {
-		return classpathResponse.openStream();
-	}
+    public InputStream getBodyInputStream() throws IOException {
+        return classpathResponse.openStream();
+    }
 
-	@Override
-	public String toString() {
-		return "ClasspathResourceResponse" +
-				"[" + super.toString() +
-				", contentType = '" + contentType + "'" +
-				", classpathResponse = " + classpathResponse +
-				"]";
-	}
+    @Override
+    public String toString() {
+        return "ClasspathResourceResponse" +
+                "[" + super.toString() +
+                ", contentType = '" + contentType + "'" +
+                ", classpathResponse = " + classpathResponse +
+                "]";
+    }
 }
