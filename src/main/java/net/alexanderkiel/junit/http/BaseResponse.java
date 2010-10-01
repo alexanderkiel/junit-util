@@ -19,6 +19,7 @@ package net.alexanderkiel.junit.http;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.unmodifiableMap;
@@ -32,23 +33,23 @@ abstract class BaseResponse implements Response {
     static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private final int statusCode;
-    private final Map<String, String> headers;
+    private final Map<String, List<String>> headers;
 
     BaseResponse(int statusCode) {
         this.statusCode = statusCode;
         headers = Collections.emptyMap();
     }
 
-    BaseResponse(int statusCode, Map<String, String> headers) {
+    BaseResponse(int statusCode, Map<String, List<String>> headers) {
         this.statusCode = statusCode;
-        this.headers = unmodifiableMap(new HashMap<String, String>(headers));
+        this.headers = unmodifiableMap(new HashMap<String, List<String>>(headers));
     }
 
     public int getStatusCode() {
         return statusCode;
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, List<String>> getHeaders() {
         return headers;
     }
 

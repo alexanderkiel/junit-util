@@ -19,6 +19,7 @@ package net.alexanderkiel.junit.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +37,7 @@ public class ClasspathResourceResponse extends BaseResponse {
         this.classpathResponse = classpathResponse;
     }
 
-    public ClasspathResourceResponse(int statusCode, Map<String, String> headers, String contentType,
+    public ClasspathResourceResponse(int statusCode, Map<String, List<String>> headers, String contentType,
                                      URL classpathResponse) {
         super(statusCode, headers);
         this.contentType = contentType;

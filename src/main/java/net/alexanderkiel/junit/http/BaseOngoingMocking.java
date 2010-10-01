@@ -59,6 +59,7 @@ abstract class BaseOngoingMocking implements OngoingMocking, HttpHandler {
     }
 
     void setResponseHeaders(Headers headers) {
+        headers.putAll(response.getHeaders());
         if (response.hasBody()) {
             headers.set("Content-Type", response.getContentType());
         }

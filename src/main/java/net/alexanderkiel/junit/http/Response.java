@@ -18,6 +18,7 @@ package net.alexanderkiel.junit.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ public interface Response {
 
     int getStatusCode();
 
-    Map<String, String> getHeaders();
+    Map<String, List<String>> getHeaders();
 
     String getContentType();
 
