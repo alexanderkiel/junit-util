@@ -20,32 +20,31 @@ import java.io.InputStream;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public class EmptyResponse extends BaseResponse {
 
-	public EmptyResponse(int statusCode) {
-		super(statusCode);
-	}
+    public EmptyResponse(int statusCode) {
+        super(statusCode);
+    }
 
-	public String getContentType() {
-		throw new UnsupportedOperationException("This response doesn't have a body.");
-	}
+    public String getContentType() {
+        throw new UnsupportedOperationException("This response doesn't have a body.");
+    }
 
-	public boolean hasBody() {
-		return false;
-	}
+    public boolean hasBody() {
+        return false;
+    }
 
-	public long getBodyLength() {
-		throw new UnsupportedOperationException("This response doesn't have a body.");
-	}
+    public long getBodyLength() {
+        throw new UnsupportedOperationException("This response doesn't have a body.");
+    }
 
-	public InputStream getBodyInputStream() {
-		throw new UnsupportedOperationException("This response doesn't have a body.");
-	}
+    public InputStream getBodyInputStream() {
+        throw new UnsupportedOperationException("This response doesn't have a body.");
+    }
 
-	@Override
-	public String toString() {
-		return "EmptyResponse[" + super.toString() + "]";
-	}
+    @Override
+    public String toString() {
+        return "EmptyResponse[" + super.toString() + "]";
+    }
 }
