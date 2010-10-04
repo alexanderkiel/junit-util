@@ -21,37 +21,36 @@ import java.io.InputStream;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public class StringResponse extends BaseResponse {
 
-	private final String contentType;
-	private final String body;
+    private final String contentType;
+    private final String body;
 
-	public StringResponse(int statusCode, String contentType, String body) {
-		super(statusCode);
-		this.contentType = contentType;
-		this.body = body;
-	}
+    public StringResponse(int statusCode, String contentType, String body) {
+        super(statusCode);
+        this.contentType = contentType;
+        this.body = body;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public boolean hasBody() {
-		return true;
-	}
+    public boolean hasBody() {
+        return true;
+    }
 
-	public long getBodyLength() {
-		return body.length();
-	}
+    public long getBodyLength() {
+        return body.length();
+    }
 
-	public InputStream getBodyInputStream() {
-		return new ByteArrayInputStream(body.getBytes(UTF_8));
-	}
+    public InputStream getBodyInputStream() {
+        return new ByteArrayInputStream(body.getBytes(UTF_8));
+    }
 
-	@Override
-	public String toString() {
-		return "StringResponse[" + super.toString() + ", contentType = '" + contentType + "', body = '" + body + "']";
-	}
+    @Override
+    public String toString() {
+        return "StringResponse[" + super.toString() + ", contentType = '" + contentType + "', body = '" + body + "']";
+    }
 }
