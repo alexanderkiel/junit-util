@@ -29,6 +29,12 @@ public class StringResponse extends BaseResponse {
 
     public StringResponse(int statusCode, String contentType, String body) {
         super(statusCode);
+        if (contentType == null) {
+            throw new NullPointerException("Can't resolve the argument 'contentType'.");
+        }
+        if (body == null) {
+            throw new NullPointerException("Can't resolve the argument 'body'.");
+        }
         this.contentType = contentType;
         this.body = body;
     }

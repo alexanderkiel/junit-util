@@ -24,7 +24,6 @@ import java.util.Map;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public class ClasspathResourceResponse extends BaseResponse {
 
@@ -33,6 +32,12 @@ public class ClasspathResourceResponse extends BaseResponse {
 
     public ClasspathResourceResponse(int statusCode, String contentType, URL classpathResponse) {
         super(statusCode);
+        if (contentType == null) {
+            throw new NullPointerException("Can't resolve the argument 'contentType'.");
+        }
+        if (classpathResponse == null) {
+            throw new NullPointerException("Can't resolve the argument 'classpathResponse'.");
+        }
         this.contentType = contentType;
         this.classpathResponse = classpathResponse;
     }
@@ -40,6 +45,12 @@ public class ClasspathResourceResponse extends BaseResponse {
     public ClasspathResourceResponse(int statusCode, Map<String, List<String>> headers, String contentType,
                                      URL classpathResponse) {
         super(statusCode, headers);
+        if (contentType == null) {
+            throw new NullPointerException("Can't resolve the argument 'contentType'.");
+        }
+        if (classpathResponse == null) {
+            throw new NullPointerException("Can't resolve the argument 'classpathResponse'.");
+        }
         this.contentType = contentType;
         this.classpathResponse = classpathResponse;
     }
