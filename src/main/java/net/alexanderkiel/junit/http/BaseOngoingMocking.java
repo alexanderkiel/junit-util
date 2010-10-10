@@ -31,7 +31,6 @@ import static java.util.logging.Level.FINER;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 abstract class BaseOngoingMocking implements OngoingMocking, HttpHandler {
 

@@ -26,7 +26,6 @@ import java.util.Map;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 class DefaultHandler implements HttpHandler {
 

@@ -50,7 +50,6 @@ import static org.junit.Assert.assertTrue;
  * <b>This class uses the commands {@code tar} and {@code rm}. So it is not portable.</b>
  *
  * @author Alexander Kiel
- * @version $Id$
  */
 public abstract class AbstractAppIT implements AppExecutor {
 

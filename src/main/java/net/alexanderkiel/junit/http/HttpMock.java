@@ -22,7 +22,6 @@ import java.io.IOException;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public class HttpMock {
 

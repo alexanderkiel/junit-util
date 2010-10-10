@@ -16,8 +16,12 @@
 
 package net.alexanderkiel.junit;
 
-import java.io.*;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -29,7 +33,6 @@ import static org.junit.Assert.assertNull;
  * later on.
  *
  * @author Alexander Kiel
- * @version $Id$
  */
 public class OutputCollector {
 

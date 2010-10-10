@@ -25,20 +25,19 @@ import static net.alexanderkiel.junit.http.HttpMock.Method.GET;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 class CatchAllHandler implements HttpHandler {
 
-	private static final int NOT_FOUND = 404;
+    private static final int NOT_FOUND = 404;
 
-	public void handle(HttpExchange httpExchange) throws IOException {
-		if (isGetRequest(httpExchange)) {
-			httpExchange.sendResponseHeaders(NOT_FOUND, -1);
-			httpExchange.close();
-		}
-	}
+    public void handle(HttpExchange httpExchange) throws IOException {
+        if (isGetRequest(httpExchange)) {
+            httpExchange.sendResponseHeaders(NOT_FOUND, -1);
+            httpExchange.close();
+        }
+    }
 
-	private static boolean isGetRequest(HttpExchange httpExchange) {
-		return GET.name().equals(httpExchange.getRequestMethod());
-	}
+    private static boolean isGetRequest(HttpExchange httpExchange) {
+        return GET.name().equals(httpExchange.getRequestMethod());
+    }
 }

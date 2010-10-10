@@ -22,7 +22,6 @@ import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 /**
  * @author <a href="mailto:alexander.kiel@life.uni-leipzig.de">Alexander Kiel</a>
- * @version $Id$
  */
 public final class BasicAuthToken {
 

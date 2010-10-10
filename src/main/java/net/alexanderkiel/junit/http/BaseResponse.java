@@ -26,7 +26,6 @@ import static java.util.Collections.unmodifiableMap;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 abstract class BaseResponse implements Response {
 

@@ -33,78 +33,77 @@ import static org.mockito.Mockito.verify;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultHandlerTest {
 
-	private static final URI BASE_URI = URI.create("http://host.org:8080/foo");
+    private static final URI BASE_URI = URI.create("http://host.org:8080/foo");
 
-	private DefaultHandler handler;
+    private DefaultHandler handler;
 
-	@Mock
-	private HttpHandler subHandler;
+    @Mock
+    private HttpHandler subHandler;
 
-	@Mock
-	private HttpExchange httpExchange;
+    @Mock
+    private HttpExchange httpExchange;
 
-	@Before
-	public void setUp() throws Exception {
-		handler = new DefaultHandler(BASE_URI);
-	}
+    @Before
+    public void setUp() throws Exception {
+        handler = new DefaultHandler(BASE_URI);
+    }
 
-	@Test
-	public void testHandleMatchingMethodAndPath() throws Exception {
-		handler.registerSubHandler(GET, "bar", subHandler);
-		givenRequestMethod("GET");
-		givenRequestPath("/bar");
+    @Test
+    public void testHandleMatchingMethodAndPath() throws Exception {
+        handler.registerSubHandler(GET, "bar", subHandler);
+        givenRequestMethod("GET");
+        givenRequestPath("/bar");
 
-		handler.handle(httpExchange);
+        handler.handle(httpExchange);
 
-		verify(subHandler).handle(httpExchange);
-	}
+        verify(subHandler).handle(httpExchange);
+    }
 
-	@Test
-	public void testHandleMatchingMethod() throws Exception {
-		handler.registerSubHandler(GET, "bar", subHandler);
-		givenRequestMethod("GET");
-		givenRequestPath("/foo");
+    @Test
+    public void testHandleMatchingMethod() throws Exception {
+        handler.registerSubHandler(GET, "bar", subHandler);
+        givenRequestMethod("GET");
+        givenRequestPath("/foo");
 
-		handler.handle(httpExchange);
+        handler.handle(httpExchange);
 
-		verify(httpExchange).sendResponseHeaders(404, -1);
-		verify(httpExchange).close();
-	}
+        verify(httpExchange).sendResponseHeaders(404, -1);
+        verify(httpExchange).close();
+    }
 
-	@Test
-	public void testHandleMatchingPath() throws Exception {
-		handler.registerSubHandler(GET, "bar", subHandler);
-		givenRequestMethod("POST");
-		givenRequestPath("/bar");
+    @Test
+    public void testHandleMatchingPath() throws Exception {
+        handler.registerSubHandler(GET, "bar", subHandler);
+        givenRequestMethod("POST");
+        givenRequestPath("/bar");
 
-		handler.handle(httpExchange);
+        handler.handle(httpExchange);
 
-		verify(httpExchange).sendResponseHeaders(404, -1);
-		verify(httpExchange).close();
-	}
+        verify(httpExchange).sendResponseHeaders(404, -1);
+        verify(httpExchange).close();
+    }
 
-	@Test
-	public void testHandleNothingMatches() throws Exception {
-		handler.registerSubHandler(GET, "bar", subHandler);
-		givenRequestMethod("POST");
-		givenRequestPath("/foo");
+    @Test
+    public void testHandleNothingMatches() throws Exception {
+        handler.registerSubHandler(GET, "bar", subHandler);
+        givenRequestMethod("POST");
+        givenRequestPath("/foo");
 
-		handler.handle(httpExchange);
+        handler.handle(httpExchange);
 
-		verify(httpExchange).sendResponseHeaders(404, -1);
-		verify(httpExchange).close();
-	}
+        verify(httpExchange).sendResponseHeaders(404, -1);
+        verify(httpExchange).close();
+    }
 
-	private void givenRequestMethod(String method) {
-		given(httpExchange.getRequestMethod()).willReturn(method);
-	}
+    private void givenRequestMethod(String method) {
+        given(httpExchange.getRequestMethod()).willReturn(method);
+    }
 
-	private void givenRequestPath(String path) throws URISyntaxException {
-		given(httpExchange.getRequestURI()).willReturn(new URI(BASE_URI.toString() + path));
-	}
+    private void givenRequestPath(String path) throws URISyntaxException {
+        given(httpExchange.getRequestURI()).willReturn(new URI(BASE_URI.toString() + path));
+    }
 }

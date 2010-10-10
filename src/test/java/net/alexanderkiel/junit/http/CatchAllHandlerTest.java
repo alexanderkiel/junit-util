@@ -28,35 +28,34 @@ import static org.mockito.Mockito.verify;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CatchAllHandlerTest {
 
-	private CatchAllHandler handler;
+    private CatchAllHandler handler;
 
-	@Mock
-	private HttpExchange httpExchange;
+    @Mock
+    private HttpExchange httpExchange;
 
-	@Before
-	public void setUp() throws Exception {
-		handler = new CatchAllHandler();
-	}
+    @Before
+    public void setUp() throws Exception {
+        handler = new CatchAllHandler();
+    }
 
-	@Test
-	public void testHandleGetRequest() throws Exception {
-		given(httpExchange.getRequestMethod()).willReturn("GET");
+    @Test
+    public void testHandleGetRequest() throws Exception {
+        given(httpExchange.getRequestMethod()).willReturn("GET");
 
-		handler.handle(httpExchange);
+        handler.handle(httpExchange);
 
-		verify(httpExchange).sendResponseHeaders(404, -1);
-		verify(httpExchange).close();
-	}
+        verify(httpExchange).sendResponseHeaders(404, -1);
+        verify(httpExchange).close();
+    }
 
-	@Test
-	public void testHandlePostRequest() throws Exception {
-		given(httpExchange.getRequestMethod()).willReturn("POST");
+    @Test
+    public void testHandlePostRequest() throws Exception {
+        given(httpExchange.getRequestMethod()).willReturn("POST");
 
-		handler.handle(httpExchange);
-	}
+        handler.handle(httpExchange);
+    }
 }

@@ -18,7 +18,6 @@ package net.alexanderkiel.junit.http;
 
 /**
  * @author <a href="mailto:alexander.kiel@life.uni-leipzig.de">Alexander Kiel</a>
- * @version $Id$
  */
 class Key {
 

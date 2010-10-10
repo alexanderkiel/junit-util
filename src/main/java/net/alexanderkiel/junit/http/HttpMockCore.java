@@ -35,7 +35,6 @@ import static java.util.logging.Level.FINE;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 class HttpMockCore {
 

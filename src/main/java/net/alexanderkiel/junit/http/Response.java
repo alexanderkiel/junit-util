@@ -23,7 +23,6 @@ import java.util.Map;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public interface Response {
 

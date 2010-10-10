@@ -29,7 +29,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 class WritableOngoingMocking extends BaseOngoingMocking {
 

@@ -22,7 +22,6 @@ import static net.alexanderkiel.junit.Assert.assertBasicEqualsAndHashCodeBehavio
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public class AssertTest {
 

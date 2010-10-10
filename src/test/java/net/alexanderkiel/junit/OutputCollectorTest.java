@@ -23,7 +23,6 @@ import java.io.PrintStream;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public class OutputCollectorTest {
 

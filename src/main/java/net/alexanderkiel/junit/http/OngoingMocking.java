@@ -18,7 +18,6 @@ package net.alexanderkiel.junit.http;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public interface OngoingMocking {
 

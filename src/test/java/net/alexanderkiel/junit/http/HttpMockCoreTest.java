@@ -27,39 +27,38 @@ import static org.mockito.Mockito.verify;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 @RunWith(MockitoJUnitRunner.class)
 public class HttpMockCoreTest {
 
-	private static final String CONTEXT_PATH = "foo";
+    private static final String CONTEXT_PATH = "foo";
 
-	private HttpMockCore httpMock;
+    private HttpMockCore httpMock;
 
-	@Mock
-	private HttpServer httpServer;
+    @Mock
+    private HttpServer httpServer;
 
-	@Before
-	public void setUp() throws Exception {
-		httpMock = new HttpMockCore(httpServer, CONTEXT_PATH);
-	}
+    @Before
+    public void setUp() throws Exception {
+        httpMock = new HttpMockCore(httpServer, CONTEXT_PATH);
+    }
 
-	@Test
-	public void testStart() throws Exception {
-		httpMock.start();
+    @Test
+    public void testStart() throws Exception {
+        httpMock.start();
 
-		verify(httpServer).start();
-	}
+        verify(httpServer).start();
+    }
 
-	@Test
-	public void testStop() throws Exception {
-		httpMock.stop();
+    @Test
+    public void testStop() throws Exception {
+        httpMock.stop();
 
-		verify(httpServer).stop(0);
-	}
+        verify(httpServer).stop(0);
+    }
 
-	@Test
-	public void testGiven() throws Exception {
+    @Test
+    public void testGiven() throws Exception {
 
-	}
+    }
 }

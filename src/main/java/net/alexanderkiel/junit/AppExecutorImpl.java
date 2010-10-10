@@ -32,124 +32,123 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 class AppExecutorImpl implements AppExecutor {
 
-	private final Runtime runtime;
-	private final List<String> args;
-	private boolean commandSet;
-	private Process process;
-	private BufferedReader standardOut;
-	private BufferedReader standardErr;
+    private final Runtime runtime;
+    private final List<String> args;
+    private boolean commandSet;
+    private Process process;
+    private BufferedReader standardOut;
+    private BufferedReader standardErr;
 
-	AppExecutorImpl(@NotNull Runtime runtime) {
-		this.runtime = runtime;
-		args = new ArrayList<String>();
-	}
+    AppExecutorImpl(@NotNull Runtime runtime) {
+        this.runtime = runtime;
+        args = new ArrayList<String>();
+    }
 
-	/**
-	 * Sets the command name of the application of this app executor.
-	 *
-	 * @param command the command name.
-	 */
-	public void setCommand(@NotNull String command) {
-		commandSet = true;
-		args.add(command);
-	}
+    /**
+     * Sets the command name of the application of this app executor.
+     *
+     * @param command the command name.
+     */
+    public void setCommand(@NotNull String command) {
+        commandSet = true;
+        args.add(command);
+    }
 
-	public void addArg(@NotNull String arg) {
-		args.add(arg);
-	}
+    public void addArg(@NotNull String arg) {
+        args.add(arg);
+    }
 
-	public void addArgs(String... args) {
-		this.args.addAll(asList(args));
-	}
+    public void addArgs(String... args) {
+        this.args.addAll(asList(args));
+    }
 
-	public void executeApp() throws IOException {
-		if (!commandSet) {
-			throw new IllegalStateException("The was no command set.");
-		}
+    public void executeApp() throws IOException {
+        if (!commandSet) {
+            throw new IllegalStateException("The was no command set.");
+        }
 
-		process = runtime.exec(getArgsAsArray());
+        process = runtime.exec(getArgsAsArray());
 
-		standardOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		standardErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-	}
+        standardOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        standardErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+    }
 
-	private String[] getArgsAsArray() {
-		return args.toArray(new String[args.size()]);
-	}
+    private String[] getArgsAsArray() {
+        return args.toArray(new String[args.size()]);
+    }
 
-	public void assertLineOfOutput(@NotNull String expectedLine) throws IOException {
-		String line = standardOut.readLine();
-		assertNotNull(lineExistsMessage("STDOUT"), line);
-		assertEquals("line of output on STDOUT", expectedLine, line);
-	}
+    public void assertLineOfOutput(@NotNull String expectedLine) throws IOException {
+        String line = standardOut.readLine();
+        assertNotNull(lineExistsMessage("STDOUT"), line);
+        assertEquals("line of output on STDOUT", expectedLine, line);
+    }
 
-	private static String lineExistsMessage(String streamName) {
-		return String.format("output on %s exists", streamName);
-	}
+    private static String lineExistsMessage(String streamName) {
+        return String.format("output on %s exists", streamName);
+    }
 
-	public void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException {
-		String line = standardOut.readLine();
-		assertNotNull(lineExistsMessage("STDOUT"), line);
-		assertTrue(matchingMessage("STDOUT", expectedLineRegExp, line), line.matches(expectedLineRegExp));
-	}
+    public void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException {
+        String line = standardOut.readLine();
+        assertNotNull(lineExistsMessage("STDOUT"), line);
+        assertTrue(matchingMessage("STDOUT", expectedLineRegExp, line), line.matches(expectedLineRegExp));
+    }
 
-	private static String matchingMessage(String streamName, String expectedLineRegExp, String line) {
-		return String.format("line of output on %s matches /%s/ but was: %s", streamName, expectedLineRegExp, line);
-	}
+    private static String matchingMessage(String streamName, String expectedLineRegExp, String line) {
+        return String.format("line of output on %s matches /%s/ but was: %s", streamName, expectedLineRegExp, line);
+    }
 
-	public void assertLineOfError(@NotNull String expectedLine) throws IOException {
-		assertEquals("line of output on STDERR", expectedLine, standardErr.readLine());
-	}
+    public void assertLineOfError(@NotNull String expectedLine) throws IOException {
+        assertEquals("line of output on STDERR", expectedLine, standardErr.readLine());
+    }
 
-	public void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException {
-		String line = standardErr.readLine();
-		assertNotNull(lineExistsMessage("STDERR"), line);
-		assertTrue(matchingMessage("STDERR", expectedLineRegExp, line), line.matches(expectedLineRegExp));
-	}
+    public void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException {
+        String line = standardErr.readLine();
+        assertNotNull(lineExistsMessage("STDERR"), line);
+        assertTrue(matchingMessage("STDERR", expectedLineRegExp, line), line.matches(expectedLineRegExp));
+    }
 
-	public void assertNoMoreOutput() throws IOException {
-		assertEquals("no more output on STDOUT", "", getAllLines(standardOut));
-	}
+    public void assertNoMoreOutput() throws IOException {
+        assertEquals("no more output on STDOUT", "", getAllLines(standardOut));
+    }
 
-	private static String getAllLines(BufferedReader reader) throws IOException {
-		StringBuilder buffer = new StringBuilder();
-		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			buffer.append(line).append('\n');
-		}
-		return buffer.toString();
-	}
+    private static String getAllLines(BufferedReader reader) throws IOException {
+        StringBuilder buffer = new StringBuilder();
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            buffer.append(line).append('\n');
+        }
+        return buffer.toString();
+    }
 
-	public void assertNoMoreErrors() throws IOException {
-		assertEquals("no more output on STDERR", "", getAllLines(standardErr));
-	}
+    public void assertNoMoreErrors() throws IOException {
+        assertEquals("no more output on STDERR", "", getAllLines(standardErr));
+    }
 
-	public void assertNormalExit() throws InterruptedException {
-		assertExit(0);
-	}
+    public void assertNormalExit() throws InterruptedException {
+        assertExit(0);
+    }
 
-	public void assertExit(int expectedStatusCode) throws InterruptedException {
-		assertEquals(displayCommand() + " status code is", expectedStatusCode, process.waitFor());
-	}
+    public void assertExit(int expectedStatusCode) throws InterruptedException {
+        assertEquals(displayCommand() + " status code is", expectedStatusCode, process.waitFor());
+    }
 
-	private String displayCommand() {
-		Iterator<String> iterator = args.iterator();
-		StringBuilder buffer = new StringBuilder(iterator.next());
-		while (iterator.hasNext()) {
-			buffer.append(' ').append(iterator.next());
-		}
-		return buffer.toString();
-	}
+    private String displayCommand() {
+        Iterator<String> iterator = args.iterator();
+        StringBuilder buffer = new StringBuilder(iterator.next());
+        while (iterator.hasNext()) {
+            buffer.append(' ').append(iterator.next());
+        }
+        return buffer.toString();
+    }
 
-	public void destroy() {
-		process.destroy();
-	}
+    public void destroy() {
+        process.destroy();
+    }
 
-	@Override
-	public String toString() {
-		return "AppExecutorImpl[args = " + args + "]";
-	}
+    @Override
+    public String toString() {
+        return "AppExecutorImpl[args = " + args + "]";
+    }
 }

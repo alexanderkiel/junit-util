@@ -23,27 +23,26 @@ import java.net.InetSocketAddress;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 class HttpMockCoreFactory {
 
-	private final String hostname;
-	private final int port;
-	private final String contextPath;
+    private final String hostname;
+    private final int port;
+    private final String contextPath;
 
-	HttpMockCoreFactory(String hostname, int port, String contextPath) {
-		this.hostname = hostname;
-		this.port = port;
-		this.contextPath = contextPath;
-	}
+    HttpMockCoreFactory(String hostname, int port, String contextPath) {
+        this.hostname = hostname;
+        this.port = port;
+        this.contextPath = contextPath;
+    }
 
-	HttpMockCore create() throws IOException {
-		HttpServer httpServer = HttpServer.create(new InetSocketAddress(hostname, port), 0);
-		return new HttpMockCore(httpServer, contextPath);
-	}
+    HttpMockCore create() throws IOException {
+        HttpServer httpServer = HttpServer.create(new InetSocketAddress(hostname, port), 0);
+        return new HttpMockCore(httpServer, contextPath);
+    }
 
-	@Override
-	public String toString() {
-		return "HttpMockCoreFactory[hostname = '" + hostname + "', port = " + port + "]";
-	}
+    @Override
+    public String toString() {
+        return "HttpMockCoreFactory[hostname = '" + hostname + "', port = " + port + "]";
+    }
 }

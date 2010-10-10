@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:alexander.kiel@life.uni-leipzig.de">Alexander Kiel</a>
- * @version $Id$
  */
 public class BasicAuthTokenTest {
 

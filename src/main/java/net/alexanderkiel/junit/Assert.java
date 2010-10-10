@@ -26,7 +26,6 @@ import static org.junit.Assert.fail;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 public class Assert {
 

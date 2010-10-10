@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author Alexander Kiel
- * @version $Id$
  */
 class ReadonlyOngoingMocking extends BaseOngoingMocking {
 
