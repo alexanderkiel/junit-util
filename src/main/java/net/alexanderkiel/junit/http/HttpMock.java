@@ -53,8 +53,8 @@ public class HttpMock {
         return httpMockCore.given(method, path);
     }
 
-    public static OngoingMocking given(Method method, String path, String payload) {
-        return httpMockCore.given(method, path, payload);
+    public static OngoingMocking given(Method method, String path, String payloadContentType, String payload) {
+        return httpMockCore.given(method, path, payloadContentType, payload);
     }
 
     public static void verify() {

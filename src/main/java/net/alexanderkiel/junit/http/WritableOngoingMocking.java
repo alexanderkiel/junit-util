@@ -23,8 +23,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.nio.charset.Charset;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -34,12 +36,15 @@ class WritableOngoingMocking extends BaseOngoingMocking {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
+    private final String payloadContentType;
     private final String payload;
     private final char[] charBuffer;
-    private String message;
-    private String body;
+    private URI requestUri;
+    private String requestContentType;
+    private String requestBody;
 
-    WritableOngoingMocking(@NotNull String payload) {
+    WritableOngoingMocking(@NotNull String payloadContentType, @NotNull String payload) {
+        this.payloadContentType = payloadContentType;
         this.payload = payload;
         charBuffer = new char[BUFFER_SIZE];
     }
@@ -55,8 +60,9 @@ class WritableOngoingMocking extends BaseOngoingMocking {
     }
 
     private void verifyPayload(HttpExchange httpExchange) throws IOException {
-        message = String.format("request %s payload", httpExchange.getRequestURI());
-        body = readBody(httpExchange.getRequestBody());
+        requestUri = httpExchange.getRequestURI();
+        requestContentType = httpExchange.getRequestHeaders().getFirst("Content-Type").split(";")[0].trim();
+        requestBody = readBody(httpExchange.getRequestBody());
     }
 
     private String readBody(InputStream requestBodyInputStream) throws IOException {
@@ -75,7 +81,8 @@ class WritableOngoingMocking extends BaseOngoingMocking {
     }
 
     public void verify() {
-        assertEquals(message, payload, body);
+        assertEquals(format("request %s content type", requestUri), payloadContentType, requestContentType);
+        assertEquals(format("request %s payload", requestUri), payload, requestBody);
     }
 
     @Override
