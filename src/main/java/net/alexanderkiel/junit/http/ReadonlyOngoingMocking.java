@@ -38,7 +38,7 @@ class ReadonlyOngoingMocking extends BaseOngoingMocking {
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
-        log(httpExchange);
+        logRequest(httpExchange);
         setCalled();
         checkAuthorisation(httpExchange);
         setResponseHeaders(httpExchange.getResponseHeaders());

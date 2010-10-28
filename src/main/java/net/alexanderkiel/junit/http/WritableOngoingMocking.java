@@ -50,7 +50,7 @@ class WritableOngoingMocking extends BaseOngoingMocking {
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
-        log(httpExchange);
+        logRequest(httpExchange);
         verifyPayload(httpExchange);
         checkAuthorisation(httpExchange);
         setResponseHeaders(httpExchange.getResponseHeaders());

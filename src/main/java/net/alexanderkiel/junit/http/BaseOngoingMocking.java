@@ -108,10 +108,11 @@ abstract class BaseOngoingMocking implements OngoingMocking, HttpHandler {
         }
     }
 
-    protected void log(HttpExchange httpExchange) {
+    protected static void logRequest(HttpExchange httpExchange) {
         if (LOGGER.isLoggable(FINER)) {
-            LOGGER.finer(format("Handle request: %s %s", httpExchange.getRequestMethod(),
-                    httpExchange.getRequestURI()));
+            String contentType = httpExchange.getRequestHeaders().getFirst("Content-Type");
+            LOGGER.finer(format("Handle request: %s %s, Content-Type: %s", httpExchange.getRequestMethod(),
+                    httpExchange.getRequestURI(), contentType == null ? "N/A" : contentType));
         }
     }
 
