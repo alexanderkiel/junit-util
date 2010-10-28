@@ -18,6 +18,7 @@ package net.alexanderkiel.junit.http;
 
 import com.sun.net.httpserver.HttpExchange;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
@@ -35,11 +37,14 @@ import static org.junit.Assert.assertEquals;
 class WritableOngoingMocking extends BaseOngoingMocking {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private static final Pattern SEMICOLON_SPLIT_PATTERN = Pattern.compile(";");
 
     private final String payloadContentType;
     private final String payload;
     private final char[] charBuffer;
     private URI requestUri;
+
+    @Nullable
     private String requestContentType;
     private String requestBody;
 
@@ -61,8 +66,19 @@ class WritableOngoingMocking extends BaseOngoingMocking {
 
     private void verifyPayload(HttpExchange httpExchange) throws IOException {
         requestUri = httpExchange.getRequestURI();
-        requestContentType = httpExchange.getRequestHeaders().getFirst("Content-Type").split(";")[0].trim();
+        requestContentType = extractContentType(httpExchange);
         requestBody = readBody(httpExchange.getRequestBody());
+    }
+
+    @Nullable
+    static String extractContentType(HttpExchange httpExchange) {
+        String header = httpExchange.getRequestHeaders().getFirst("Content-Type");
+        if (header == null) {
+            return null;
+        } else {
+            String[] headerParts = SEMICOLON_SPLIT_PATTERN.split(header);
+            return headerParts[0].trim();
+        }
     }
 
     private String readBody(InputStream requestBodyInputStream) throws IOException {
