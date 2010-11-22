@@ -129,6 +129,15 @@ public abstract class AbstractAppIT implements AppExecutor {
     }
 
     /**
+     * Returns the directory of the extracted tar.gz.
+     *
+     * @return the directory of the extracted tar.gz.
+     */
+    public File getAppDir() {
+        return new File("target/" + ARTIFACT_ID + "-" + VERSION);
+    }
+
+    /**
      * Prepares the execution of the application under test.
      */
     @Before
