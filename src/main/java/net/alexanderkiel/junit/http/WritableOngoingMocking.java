@@ -97,8 +97,8 @@ class WritableOngoingMocking extends BaseOngoingMocking {
     }
 
     public void verify() {
-        assertEquals(format("request %s content type", requestUri), payloadContentType, requestContentType);
-        assertEquals(format("request %s payload", requestUri), payload, requestBody);
+        assertEquals(format("request '%s' content type", requestUri), payloadContentType, requestContentType);
+        assertEquals(format("request '%s' payload", requestUri), payload, requestBody);
     }
 
     @Override
