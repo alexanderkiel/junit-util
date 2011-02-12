@@ -3,7 +3,7 @@
   ---------------------------------------------------------------------------
                                 Alexander Kiel
   ---------------------------------------------------------------------------
-                                  2010-07-12
+                                  2011-02-12
   ---------------------------------------------------------------------------
 
 About Junit Util
@@ -26,4 +26,9 @@ Change Log
     * added RegExp line matcher to AppExecutor
 
     * added first version of the HttpMock framework for mocking HTTP servers
-    
+
+  * 0.3
+
+    * added assertEqualsCircaNow to Assert
+
+    * many additions to the HttpMock framework 
