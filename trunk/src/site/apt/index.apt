@@ -1,0 +1,39 @@
+  ---------------------------------------------------------------------------
+                                  Overview
+  ---------------------------------------------------------------------------
+                                Alexander Kiel
+  ---------------------------------------------------------------------------
+                                  2011-03-02
+  ---------------------------------------------------------------------------
+
+About Junit Util
+
+  Junit-util contains common assertions which extend the junit assertions and
+are helpful in many projects.
+
+Change Log
+
+  * 0.1
+
+    * Initial version
+
+  * 0.1.1
+
+    * Fixed POM added release repository so that the parent POM can be found.
+
+  * 0.2
+
+    * added RegExp line matcher to AppExecutor
+
+    * added first version of the HttpMock framework for mocking HTTP servers
+
+  * 0.3
+
+    * added assertEqualsCircaNow to Assert
+
+    * many additions to the HttpMock framework 
+
+  * 0.4
+
+    * Improved the assertion error message if a WritableOngoingMocking request
+      isn't called.
