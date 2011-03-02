@@ -11,7 +11,7 @@
 
     <groupId>net.alexanderkiel</groupId>
     <artifactId>junit-util</artifactId>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
 
     <name>Junit Util</name>
     <description>
@@ -21,8 +21,8 @@
     <inceptionYear>2010</inceptionYear>
 
     <scm>
-        <connection>scm:svn:https://svn.alexanderkiel.net/projects/junit-util/tags/junit-util-0.5</connection>
-        <url>https://svn.alexanderkiel.net/projects/junit-util/tags/junit-util-0.5</url>
+        <connection>scm:svn:https://svn.alexanderkiel.net/projects/junit-util/trunk</connection>
+        <url>https://svn.alexanderkiel.net/projects/junit-util/trunk</url>
     </scm>
 
     <repositories>
