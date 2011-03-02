@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
 
-<project name="Junit Util">
+<project>
     <version position="left"/>
     <body>
-        <menu name="Junit Util">
+        <menu name="${project.name}">
             <item name="Overview" href="index.html"/>
         </menu>
         <menu ref="reports"/>
