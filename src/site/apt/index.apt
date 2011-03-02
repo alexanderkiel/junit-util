@@ -37,3 +37,7 @@ Change Log
 
     * Improved the assertion error message if a WritableOngoingMocking request
       isn't called.
+
+  * 0.5
+
+    * Improved the assertion error message in WritableOngoingMocking.

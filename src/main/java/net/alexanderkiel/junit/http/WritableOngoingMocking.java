@@ -19,7 +19,6 @@ package net.alexanderkiel.junit.http;
 import com.sun.net.httpserver.HttpExchange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.Assert;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -111,8 +110,8 @@ class WritableOngoingMocking extends BaseOngoingMocking {
 
     public void verify() {
         assertTrue(format("request %s %s called", method, path), called);
-        assertEquals(format("request '%s' content type", requestUri), payloadContentType, requestContentType);
-        assertEquals(format("request '%s' payload", requestUri), payload, requestBody);
+        assertEquals(format("request %s %s content type", method, path), payloadContentType, requestContentType);
+        assertEquals(format("request %s %s payload", method, path), payload, requestBody);
     }
 
     @Override
