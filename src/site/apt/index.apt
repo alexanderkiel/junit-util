@@ -3,7 +3,7 @@
   ---------------------------------------------------------------------------
                                 Alexander Kiel
   ---------------------------------------------------------------------------
-                                  2011-02-12
+                                  2011-03-02
   ---------------------------------------------------------------------------
 
 About Junit Util
@@ -32,3 +32,8 @@ Change Log
     * added assertEqualsCircaNow to Assert
 
     * many additions to the HttpMock framework 
+
+  * 0.4
+
+    * Improved the assertion error message if a WritableOngoingMocking request
+      isn't called.

@@ -19,6 +19,7 @@ package net.alexanderkiel.junit.http;
 import com.sun.net.httpserver.HttpExchange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.junit.Assert;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Alexander Kiel
@@ -39,16 +41,22 @@ class WritableOngoingMocking extends BaseOngoingMocking {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private static final Pattern SEMICOLON_SPLIT_PATTERN = Pattern.compile(";");
 
+    private final HttpMock.Method method;
+    private final String path;
     private final String payloadContentType;
     private final String payload;
     private final char[] charBuffer;
+    private boolean called;
     private URI requestUri;
 
     @Nullable
     private String requestContentType;
     private String requestBody;
 
-    WritableOngoingMocking(@NotNull String payloadContentType, @NotNull String payload) {
+    WritableOngoingMocking(@NotNull HttpMock.Method method, @NotNull String path, @NotNull String payloadContentType,
+                           @NotNull String payload) {
+        this.method = method;
+        this.path = path;
         this.payloadContentType = payloadContentType;
         this.payload = payload;
         charBuffer = new char[BUFFER_SIZE];
@@ -56,12 +64,17 @@ class WritableOngoingMocking extends BaseOngoingMocking {
 
     public void handle(HttpExchange httpExchange) throws IOException {
         logRequest(httpExchange);
+        setCalled();
         verifyPayload(httpExchange);
         checkAuthorisation(httpExchange);
         setResponseHeaders(httpExchange.getResponseHeaders());
         sendResponseHeaders(httpExchange);
         sendResponseBody(httpExchange.getResponseBody());
         httpExchange.close();
+    }
+
+    private void setCalled() {
+        called = true;
     }
 
     private void verifyPayload(HttpExchange httpExchange) throws IOException {
@@ -97,6 +110,7 @@ class WritableOngoingMocking extends BaseOngoingMocking {
     }
 
     public void verify() {
+        assertTrue(format("request %s %s called", method, path), called);
         assertEquals(format("request '%s' content type", requestUri), payloadContentType, requestContentType);
         assertEquals(format("request '%s' payload", requestUri), payload, requestBody);
     }

@@ -90,7 +90,7 @@ class HttpMockCore {
 
     OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path, @NotNull String payloadContentType,
                          @NotNull String payload) {
-        WritableOngoingMocking mocking = new WritableOngoingMocking(payloadContentType, payload);
+        WritableOngoingMocking mocking = new WritableOngoingMocking(method, path, payloadContentType, payload);
         defaultHandler.registerSubHandler(method, path, mocking);
         mockings.put(new Key(method, path), mocking);
         return mocking;

@@ -18,14 +18,18 @@ package net.alexanderkiel.junit.http;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static net.alexanderkiel.junit.http.HttpMock.Method.POST;
 import static net.alexanderkiel.junit.http.WritableOngoingMocking.extractContentType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -34,8 +38,15 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class WritableOngoingMockingTest {
 
+    private WritableOngoingMocking mocking;
+
     @Mock
     private HttpExchange httpExchange;
+
+    @Before
+    public void setUp() {
+        mocking = new WritableOngoingMocking(POST, "/foo", "text/plain", "foo");
+    }
 
     @Test
     public void testExtractContentTypeWithoutHeader() {
@@ -88,5 +99,15 @@ public class WritableOngoingMockingTest {
         String contentType = extractContentType(httpExchange);
 
         assertEquals("content type", "application/atom+xml", contentType);
+    }
+
+    @Test
+    public void testVerifyWithoutRequestCalled() throws Exception {
+        try {
+            mocking.verify();
+            fail();
+        } catch (AssertionError e) {
+            assertEquals("assertion message", "request POST /foo called", e.getMessage());
+        }
     }
 }
