@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -46,12 +46,12 @@ class HttpMockCore {
 
     private DefaultHandler defaultHandler;
     private CommonHeaderFilter commonHeaderFilter;
-    private final Map<Key, OngoingMocking> mockings;
+    private final List<OngoingMocking> mockings;
 
     HttpMockCore(@NotNull HttpServer httpServer, @NotNull String contextPath) {
         this.httpServer = httpServer;
         this.contextPath = contextPath;
-        mockings = new HashMap<Key, OngoingMocking>();
+        mockings = new ArrayList<OngoingMocking>();
     }
 
     void init() {
@@ -84,7 +84,7 @@ class HttpMockCore {
     OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path) {
         ReadonlyOngoingMocking mocking = new ReadonlyOngoingMocking(method, path);
         defaultHandler.registerSubHandler(method, path, mocking);
-        mockings.put(new Key(method, path), mocking);
+        mockings.add(mocking);
         return mocking;
     }
 
@@ -92,7 +92,7 @@ class HttpMockCore {
                          @NotNull String payload) {
         WritableOngoingMocking mocking = new WritableOngoingMocking(method, path, payloadContentType, payload);
         defaultHandler.registerSubHandler(method, path, mocking);
-        mockings.put(new Key(method, path), mocking);
+        mockings.add(mocking);
         return mocking;
     }
 
@@ -102,7 +102,7 @@ class HttpMockCore {
      * @throws AssertionError if one of the request were invalid.
      */
     void verify() {
-        for (OngoingMocking mocking : mockings.values()) {
+        for (OngoingMocking mocking : mockings) {
             mocking.verify();
         }
     }

@@ -23,41 +23,55 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import static java.lang.String.format;
 
 /**
  * @author Alexander Kiel
  */
 class DefaultHandler implements HttpHandler {
 
+    private static final Logger LOGGER = Logger.getLogger(DefaultHandler.class.getName());
     private static final int NOT_FOUND = 404;
+    private static final int METHOD_NOT_ALLOWED = 405;
 
     private final URI baseUri;
-    private final Map<Key, HttpHandler> handlerMap;
+    private final Map<String, Map<HttpMock.Method, HttpHandler>> handlerMap;
 
     DefaultHandler(URI baseUri) {
         this.baseUri = baseUri;
-        handlerMap = new HashMap<Key, HttpHandler>();
+        handlerMap = new HashMap<String, Map<HttpMock.Method, HttpHandler>>();
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
-        Key key = buildKey(httpExchange);
-        if (handlerMap.containsKey(key)) {
-            handlerMap.get(key).handle(httpExchange);
+        String path = baseUri.relativize(httpExchange.getRequestURI()).getPath();
+
+        if (handlerMap.containsKey(path)) {
+            Map<HttpMock.Method, HttpHandler> map = handlerMap.get(path);
+            HttpMock.Method method = HttpMock.Method.valueOf(httpExchange.getRequestMethod());
+            if (map.containsKey(method)) {
+                map.get(method).handle(httpExchange);
+            } else {
+                LOGGER.severe(format("Method %s on resource '%s' not allowed.", method, path));
+                httpExchange.sendResponseHeaders(METHOD_NOT_ALLOWED, -1);
+                httpExchange.close();
+            }
         } else {
+            LOGGER.severe(format("Resource '%s' not found.", path));
             httpExchange.sendResponseHeaders(NOT_FOUND, -1);
             httpExchange.close();
         }
     }
 
-    private Key buildKey(HttpExchange httpExchange) {
-        HttpMock.Method method = HttpMock.Method.valueOf(httpExchange.getRequestMethod());
-        String path = baseUri.relativize(httpExchange.getRequestURI()).getPath();
-        return new Key(method, path);
-    }
-
     void registerSubHandler(HttpMock.Method method, String path, HttpHandler handler) {
-        Key key = new Key(method, path);
-        handlerMap.put(key, handler);
+        if (handlerMap.containsKey(path)) {
+            handlerMap.get(path).put(method, handler);
+        } else {
+            HashMap<HttpMock.Method, HttpHandler> map = new HashMap<HttpMock.Method, HttpHandler>();
+            map.put(method, handler);
+            handlerMap.put(path, map);
+        }
     }
 
     @Override

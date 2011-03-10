@@ -83,7 +83,7 @@ public class DefaultHandlerTest {
 
         handler.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(404, -1);
+        verify(httpExchange).sendResponseHeaders(405, -1);
         verify(httpExchange).close();
     }
 
