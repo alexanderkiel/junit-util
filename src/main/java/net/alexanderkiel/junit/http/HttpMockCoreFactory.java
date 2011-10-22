@@ -21,6 +21,8 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import static java.lang.String.format;
+
 /**
  * @author Alexander Kiel
  */
@@ -37,6 +39,15 @@ class HttpMockCoreFactory {
     }
 
     HttpMockCore create() throws IOException {
+        try {
+            return doCreate();
+        } catch (IOException e) {
+            throw new IOException(format("Error while creating a HTTP server on host %s and port %d: %s", hostname,
+                    port, e.getMessage()), e);
+        }
+    }
+
+    private HttpMockCore doCreate() throws IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(hostname, port), 0);
         return new HttpMockCore(httpServer, contextPath);
     }
