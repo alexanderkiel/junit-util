@@ -16,8 +16,6 @@
 
 package net.alexanderkiel.junit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,9 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Alexander Kiel
@@ -42,7 +38,7 @@ class AppExecutorImpl implements AppExecutor {
     private BufferedReader standardOut;
     private BufferedReader standardErr;
 
-    AppExecutorImpl(@NotNull Runtime runtime) {
+    AppExecutorImpl(Runtime runtime) {
         this.runtime = runtime;
         args = new ArrayList<String>();
     }
@@ -52,12 +48,12 @@ class AppExecutorImpl implements AppExecutor {
      *
      * @param command the command name.
      */
-    public void setCommand(@NotNull String command) {
+    public void setCommand(String command) {
         commandSet = true;
         args.add(command);
     }
 
-    public void addArg(@NotNull String arg) {
+    public void addArg(String arg) {
         args.add(arg);
     }
 
@@ -80,7 +76,7 @@ class AppExecutorImpl implements AppExecutor {
         return args.toArray(new String[args.size()]);
     }
 
-    public void assertLineOfOutput(@NotNull String expectedLine) throws IOException {
+    public void assertLineOfOutput(String expectedLine) throws IOException {
         String line = standardOut.readLine();
         assertNotNull(lineExistsMessage("STDOUT"), line);
         assertEquals("line of output on STDOUT", expectedLine, line);
@@ -90,7 +86,7 @@ class AppExecutorImpl implements AppExecutor {
         return String.format("output on %s exists", streamName);
     }
 
-    public void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException {
+    public void assertLineOfOutputMatches(String expectedLineRegExp) throws IOException {
         String line = standardOut.readLine();
         assertNotNull(lineExistsMessage("STDOUT"), line);
         assertTrue(matchingMessage("STDOUT", expectedLineRegExp, line), line.matches(expectedLineRegExp));
@@ -100,11 +96,11 @@ class AppExecutorImpl implements AppExecutor {
         return String.format("line of output on %s matches /%s/ but was: %s", streamName, expectedLineRegExp, line);
     }
 
-    public void assertLineOfError(@NotNull String expectedLine) throws IOException {
+    public void assertLineOfError(String expectedLine) throws IOException {
         assertEquals("line of output on STDERR", expectedLine, standardErr.readLine());
     }
 
-    public void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException {
+    public void assertLineOfErrorMatches(String expectedLineRegExp) throws IOException {
         String line = standardErr.readLine();
         assertNotNull(lineExistsMessage("STDERR"), line);
         assertTrue(matchingMessage("STDERR", expectedLineRegExp, line), line.matches(expectedLineRegExp));

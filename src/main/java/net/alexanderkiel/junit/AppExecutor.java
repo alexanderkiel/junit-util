@@ -16,8 +16,6 @@
 
 package net.alexanderkiel.junit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 
 /**
@@ -31,7 +29,7 @@ public interface AppExecutor {
      * @param arg the command-line argument
      * @see #executeApp()
      */
-    void addArg(@NotNull String arg);
+    void addArg(String arg);
 
     /**
      * Adds command-line arguments to the application of this app executor.
@@ -57,7 +55,7 @@ public interface AppExecutor {
      * @param expectedLine the expected line of output.
      * @throws IOException if an I/O error occurs.
      */
-    void assertLineOfOutput(@NotNull String expectedLine) throws IOException;
+    void assertLineOfOutput(String expectedLine) throws IOException;
 
     /**
      * Asserts that the application of this app executor outputs a line on {@link System#out STDOUT} which matches the
@@ -68,7 +66,7 @@ public interface AppExecutor {
      * @param expectedLineRegExp the regular expression used to match the line of output.
      * @throws IOException if an I/O error occurs.
      */
-    void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException;
+    void assertLineOfOutputMatches(String expectedLineRegExp) throws IOException;
 
     /**
      * Asserts that the application of this app executor outputs the given expectedLine on {@link System#err STDERR}.
@@ -78,7 +76,7 @@ public interface AppExecutor {
      * @param expectedLine the expected expectedLine of output.
      * @throws IOException if an I/O error occurs.
      */
-    void assertLineOfError(@NotNull String expectedLine) throws IOException;
+    void assertLineOfError(String expectedLine) throws IOException;
 
     /**
      * Asserts that the application of this app executor outputs a line on {@link System#err STDERR} which matches the
@@ -89,7 +87,7 @@ public interface AppExecutor {
      * @param expectedLineRegExp the regular expression used to match the line of output.
      * @throws IOException if an I/O error occurs.
      */
-    void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException;
+    void assertLineOfErrorMatches(String expectedLineRegExp) throws IOException;
 
     /**
      * Asserts that there is no more output on {@link System#out STDOUT} of the application of this app executor.

@@ -17,9 +17,8 @@
 package net.alexanderkiel.junit.http;
 
 import com.sun.net.httpserver.HttpExchange;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,8 +51,7 @@ class WritableOngoingMocking extends BaseOngoingMocking {
     private String requestContentType;
     private String requestBody;
 
-    WritableOngoingMocking(@NotNull HttpMock.Method method, @NotNull String path, @NotNull String payloadContentType,
-                           @NotNull String payload) {
+    WritableOngoingMocking(HttpMock.Method method, String path, String payloadContentType, String payload) {
         this.method = method;
         this.path = path;
         this.payloadContentType = payloadContentType;

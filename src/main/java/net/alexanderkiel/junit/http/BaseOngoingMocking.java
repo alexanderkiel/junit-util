@@ -19,7 +19,6 @@ package net.alexanderkiel.junit.http;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -47,12 +46,12 @@ abstract class BaseOngoingMocking implements OngoingMocking, HttpHandler {
         buffer = new byte[BUFFER_SIZE];
     }
 
-    public OngoingMocking willRespond(@NotNull Response response) {
+    public OngoingMocking willRespond(Response response) {
         this.response = response;
         return this;
     }
 
-    public OngoingMocking withBasicAuth(@NotNull String username, @NotNull String password) {
+    public OngoingMocking withBasicAuth(String username, String password) {
         basicAuthToken = new BasicAuthToken(username, password);
         return this;
     }

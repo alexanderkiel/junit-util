@@ -16,7 +16,6 @@
 
 package net.alexanderkiel.junit;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -69,7 +68,7 @@ public abstract class AbstractAppIT implements AppExecutor {
      * @param appName the name of the application under test.
      * @see #executeApp()
      */
-    protected AbstractAppIT(@NotNull String appName) {
+    protected AbstractAppIT(String appName) {
         this.appName = appName;
     }
 
@@ -117,14 +116,13 @@ public abstract class AbstractAppIT implements AppExecutor {
         assertEquals("rm process returns a status code of", 0, process.exitValue());
     }
 
-    @NotNull
-    protected AppExecutor createAdditionalAppExecutor(@NotNull String appName) {
+    protected AppExecutor createAdditionalAppExecutor(String appName) {
         AppExecutorImpl appExecutor = new AppExecutorImpl(Runtime.getRuntime());
         appExecutor.setCommand(getCommand(appName));
         return appExecutor;
     }
 
-    private String getCommand(@NotNull String appName) {
+    private String getCommand(String appName) {
         return "target/" + ARTIFACT_ID + "-" + VERSION + "/bin/" + appName;
     }
 
@@ -152,7 +150,7 @@ public abstract class AbstractAppIT implements AppExecutor {
      * @param arg the command-line argument
      * @see #executeApp()
      */
-    public void addArg(@NotNull String arg) {
+    public void addArg(String arg) {
         if (defaultAppExecutor == null) {
             throw new IllegalStateException("Illegal state: prepareApp() was not called by JUnit 4.");
         }
@@ -189,7 +187,7 @@ public abstract class AbstractAppIT implements AppExecutor {
      * @param expectedLine the expected line of output.
      * @throws IOException if an I/O error occurs.
      */
-    public void assertLineOfOutput(@NotNull String expectedLine) throws IOException {
+    public void assertLineOfOutput(String expectedLine) throws IOException {
         defaultAppExecutor.assertLineOfOutput(expectedLine);
     }
 
@@ -202,7 +200,7 @@ public abstract class AbstractAppIT implements AppExecutor {
      * @param expectedLineRegExp the regular expression used to match the line of output.
      * @throws IOException if an I/O error occurs.
      */
-    public void assertLineOfOutputMatches(@NotNull String expectedLineRegExp) throws IOException {
+    public void assertLineOfOutputMatches(String expectedLineRegExp) throws IOException {
         defaultAppExecutor.assertLineOfOutputMatches(expectedLineRegExp);
     }
 
@@ -214,7 +212,7 @@ public abstract class AbstractAppIT implements AppExecutor {
      * @param expectedLine the expected expectedLine of output.
      * @throws IOException if an I/O error occurs.
      */
-    public void assertLineOfError(@NotNull String expectedLine) throws IOException {
+    public void assertLineOfError(String expectedLine) throws IOException {
         defaultAppExecutor.assertLineOfError(expectedLine);
     }
 
@@ -227,7 +225,7 @@ public abstract class AbstractAppIT implements AppExecutor {
      * @param expectedLineRegExp the regular expression used to match the line of output.
      * @throws IOException if an I/O error occurs.
      */
-    public void assertLineOfErrorMatches(@NotNull String expectedLineRegExp) throws IOException {
+    public void assertLineOfErrorMatches(String expectedLineRegExp) throws IOException {
         defaultAppExecutor.assertLineOfErrorMatches(expectedLineRegExp);
     }
 

@@ -16,8 +16,6 @@
 
 package net.alexanderkiel.junit.http;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 
 /**
@@ -34,7 +32,7 @@ public class HttpMock {
     private HttpMock() {
     }
 
-    public static void start(int port, @NotNull String contextPath) throws IOException {
+    public static void start(int port, String contextPath) throws IOException {
         httpMockCore = new HttpMockCoreFactory("localhost", port, contextPath).create();
         httpMockCore.init();
         httpMockCore.setCommonHeader("Access-Control-Allow-Origin", "*");

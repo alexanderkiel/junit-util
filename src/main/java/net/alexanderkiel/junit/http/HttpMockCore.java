@@ -20,7 +20,6 @@ import com.sun.net.httpserver.Filter;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URI;
@@ -48,7 +47,7 @@ class HttpMockCore {
     private CommonHeaderFilter commonHeaderFilter;
     private final List<OngoingMocking> mockings;
 
-    HttpMockCore(@NotNull HttpServer httpServer, @NotNull String contextPath) {
+    HttpMockCore(HttpServer httpServer, String contextPath) {
         this.httpServer = httpServer;
         this.contextPath = contextPath;
         mockings = new ArrayList<OngoingMocking>();
@@ -77,19 +76,19 @@ class HttpMockCore {
         httpServer.stop(0);
     }
 
-    void setCommonHeader(@NotNull String name, @NotNull String value) {
+    void setCommonHeader(String name, String value) {
         commonHeaderFilter.setHeader(name, value);
     }
 
-    OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path) {
+    OngoingMocking given(HttpMock.Method method, String path) {
         ReadonlyOngoingMocking mocking = new ReadonlyOngoingMocking(method, path);
         defaultHandler.registerSubHandler(method, path, mocking);
         mockings.add(mocking);
         return mocking;
     }
 
-    OngoingMocking given(@NotNull HttpMock.Method method, @NotNull String path, @NotNull String payloadContentType,
-                         @NotNull String payload) {
+    OngoingMocking given(HttpMock.Method method, String path, String payloadContentType,
+                         String payload) {
         WritableOngoingMocking mocking = new WritableOngoingMocking(method, path, payloadContentType, payload);
         defaultHandler.registerSubHandler(method, path, mocking);
         mockings.add(mocking);

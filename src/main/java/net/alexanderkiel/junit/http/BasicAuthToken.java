@@ -16,8 +16,6 @@
 
 package net.alexanderkiel.junit.http;
 
-import org.jetbrains.annotations.NotNull;
-
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 /**
@@ -28,7 +26,7 @@ public final class BasicAuthToken {
     private final String username;
     private final String password;
 
-    public BasicAuthToken(@NotNull String username, @NotNull String password) {
+    public BasicAuthToken(String username, String password) {
         this.username = username;
         this.password = password;
     }
