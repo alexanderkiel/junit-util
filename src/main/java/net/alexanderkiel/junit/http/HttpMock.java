@@ -33,7 +33,11 @@ public class HttpMock {
     }
 
     public static void start(int port, String contextPath) throws IOException {
-        httpMockCore = new HttpMockCoreFactory("localhost", port, contextPath).create();
+        start("localhost", port, contextPath);
+    }
+
+    public static void start(String host, int port, String contextPath) throws IOException {
+        httpMockCore = new HttpMockCoreFactory(host, port, contextPath).create();
         httpMockCore.init();
         httpMockCore.setCommonHeader("Access-Control-Allow-Origin", "*");
         httpMockCore.setCommonHeader("Access-Control-Allow-Methods", "GET, HEAD, PUT, DELETE, POST, OPTIONS");
