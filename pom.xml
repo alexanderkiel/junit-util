@@ -22,8 +22,9 @@
     <inceptionYear>2010</inceptionYear>
 
     <scm>
-        <connection>scm:svn:https://svn.alexanderkiel.net/projects/junit-util/trunk</connection>
-        <url>https://svn.alexanderkiel.net/projects/junit-util/trunk</url>
+        <connection>scm:git:https://github.com/alexanderkiel/junit-util.git</connection>
+        <url>https://github.com/alexanderkiel/junit-util</url>
+        <tag>HEAD</tag>
     </scm>
 
     <repositories>
@@ -106,6 +107,14 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.0.0</version>
+            </extension>
+        </extensions>
     </build>
 
     <reporting>
