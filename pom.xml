@@ -22,7 +22,8 @@
     <inceptionYear>2010</inceptionYear>
 
     <scm>
-        <connection>scm:git:https://github.com/alexanderkiel/junit-util.git</connection>
+        <connection>scm:git:git@github.com:alexanderkiel/junit-util.git
+        </connection>
         <url>https://github.com/alexanderkiel/junit-util</url>
         <tag>HEAD</tag>
     </scm>
